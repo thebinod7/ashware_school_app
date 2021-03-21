@@ -1,0 +1,36 @@
+<title>FlexyQ  Recover password</title>
+
+<section class="auth">
+    <div class="auth-wrapper">
+        <form action="/u/forgot" method="post">
+          <h3>Geehee! 🙊</h3>
+          <p>How did you lose it? Let's get you a new one</p>
+            <% if(error_msg != '') { %>
+              <div class="alert-errors">
+                <div class="notify-warning">
+                  <%= error_msg %>
+              </div>
+            <% } %>
+        
+            <% if(error != '') { %>
+              <div class="alert-errors">
+                  <div class="notify-warning">
+                  <%= error %>
+                  </div>
+              </div>
+            <% } %>
+        
+            <% if(success_msg != '') { %>
+                <div class="alert-success">
+                  <div class="notify-success">
+                  <%= success_msg %>
+                  </div>
+                </div>
+            <% } %>
+            
+            <input type="email" class="u-full-width" placeholder="Email address" name="email">
+            <button type="submit" class="btn-fill btn-block">Recover It</button>
+            <p>Already have an account? <a href="/u/login">Login</a></p>
+          </form>
+    </div>
+</section>

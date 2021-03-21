@@ -1,0 +1,196 @@
+INTRO:
+Unlike regular html websites that consist of .html extensions, this app uses a template engine called
+ .ejs and express-ejs-layouts, a template component built for Node js.
+
+ The frontend is build on ejs engine, while the backend uses express, a Node js library.
+
+
+ BACKEND MODULES:
+ Modules are fully featured libraries or just two line codes that add an additional functionality to the app 
+
+
+
+ Passport js: This is used for signing up, logging in and authenticating the user in the app.
+ Stripe: (To be use in the future) This is used for processing payments on (https://www.stripe.com), which is connected to our app.
+ Nodemailer: Used for sending emails.
+ mongoose: A database driver for MongoDB. This is what the app used in storing informations on the database. informations like user password, emails, lessons, classes etc.
+ This is store on the cloud. The app uses a cloud storage know as MongoDB Atlas (https://www.mongodb.com/cloud/atlas)
+
+
+
+
+FOLDER STRUCTURE:
+[#] means: parent folder or file
+[-] means: sub folder / file  of that parent folder
+[*] means: description of the folder or file
+[#--] means: sub folder has sub folders too
+[----] mean: description of the sub folder of the subfolder 
+
+-* If you open the source code with a code editor, it should be easy understand.
+
+#Config->
+-auth.js 
+-passport.js
+*auth.js is used for making sure that the user is properly logged in, if not they'll be send back to the login page.
+*passport.js is used for authenticating the user during account creation and login
+
+
+
+
+
+
+#Modules->
+-School.js 
+-User.js 
+*School.js(aka collection) this is used for declaring a collection on the cloud database. In this case we have the School collection,
+where all the teachers, lessons, classes, and students are stored.
+*user.js (aka collection) in this collection we store the District, School admin, parent user and tiral user.
+
+#node_modules ->
+ * This is where all the app dependencies are store(developers in general don't care about what is in this folder)
+
+
+#public -> 
+#--assets ->
+-Png / Svg(all the grapics, my grapics to be precise lol)
+
+#--css ->
+ ---_props.css(not needed but can be kept) 
+---cookie.css(* a little piece of css helpers) 
+----index.css (* the app core css file)
+
+-sass (* this is used for processing .scss files to .css which the browser can understand)
+
+#--src -> 
+---index.js (
+    * This is where all client functionality lies, unlike many apps that uses different client side scripts,
+    this app uses just one, as it helps reduce load speed and gives it a cleaner structure. So obviously I can not explain every piece of code, that's like teaching you how to code. 
+    (which is not my job). Most, if not all the code in this file are commented, meaning they give a brief description about what a piece of code does.
+)
+
+
+#routes ->
+-index.js
+-user.js
+*index.js this is where all actions that uses '/' URL are placed. Any api calls, redirects, etc that uses just '/' on thier URL (This is where the core server side functionality lies)
+*user.js this is where all actions that uses '/u/' URL are placed. Any api calls, redirects, etc that uses just '/' on thier URL examples like: '/u/login', '/u/register' etc (functionalities that involves the users authenticating actions)
+
+#views ->
+-components
+-pages 
+-app.ejs
+-layout.ejs
+
+
+
+#--components -> 
+----dash.ejs (* dashboard/ report page)
+----navlist.ejs (* navigation component)
+----sharetoclass.ejs (* assign lesson to classes component)
+
+
+#---pages ->
+----account.ejs (* account info page)
+----classes.ejs (* classes page)
+----forget.ejs (* forget password page)
+----invite_empty.ejs (* register student / teacher on email invite)
+----inviteregister.ejs (* register student (on cvs upload) / school admin)
+----landing.ejs (* noting here)
+----lessonsassigned.ejs (* lessons assigned to a particular student)
+----login.ejs (* login page for admin, parent and tiral user)
+----mregister.ejs (* login page for teacher and students)
+----register.ejs (* register page for admin, parent and tiral user)
+----reset.ejs (* reset password page)
+----role.ejs (* setting role on registration)
+----school.ejs (* school page, only visible to District admin)
+----students.ejs (* student page)
+----teachers.ejs (* teacher page)
+
+
+#---app.ejs (* To make all these pages and components work, we need a file to put them, app.ejs is the file)
+#---layout.ejs (* this is the root of the entire frontend)
+
+
+
+#.env(* This is used for storing sensitive credentials like Stipe API key etc)
+#gitignore (* this is for ignoring certain files not to be added to the github commits)
+
+
+
+#main.js (* This is the core setting of the entire server side, this is where we connect the database, set the server ports, etc)
+
+
+#package-lock.json(* I've never care about this file, it was generated during the Modules installation)
+#package.json (* This is where all the app dependencies are list, as a references to the Modules file)
+
+
+
+
+## The end :)
+
+
+
+==================================================================
+
+Version 0.2
+
+* Stripe Subscription & cancel capability:
+All subscription plans must be created in Stripe before they can be used on a platform.
+Using the Stripe API a plan can be used via the plan Token. Whwnb a customer is added to a plan, 
+they will be billed immediatly and continue billing for the next month and so on until the user cancel the subscription.
+
+The subscription is availble on to 3 user type: Parent user, District and school admin.
+When a District user subscribes, that subscription is not valid for the schools that wil be created under that District.
+ All school admins must subscibed to a plan, so the school, teacher and student can inherit the subscription.
+
+
+*Search functionality:
+When a search is performed it doesn't make any request to the server, all data have be preloaded that way the system doesn't experience any latency. Searches are done in categories and the systme on
+search that category that has been selected. To deselect a category you just have to click the 'x' icon
+
+* Notification based on events (new student/teacher register):
+If this is enabeled notification will sent to District and school admin, when ever a student or teacher register and account in of the school.
+
+
+*Script to make content only accessible to registered users:
+User like Parent, school and District admin are verify via a popup window which, if the user is logged in they and has an active plan will get a pass, 
+else if user is logged in but doesn't have an active plan will get request the same for users that haven't created an account.
+
+Teacher and students are verified via the their school id
+
+
+Version 0.3
+CONTENT RESTRICTION
+
+*To be able to verify user and who they are from both content pages:
+https://firstfridays.ca/test/subjects/Careers/careers-details.html
+
+AND
+https://www.firstfridays.ca/test/subjects/Careers/bsalmon.html * pages
+
+A secure communication is needed from these pages to the server.
+
+The 'career-articleDetails.js' holds the logic on the 
+(https://www.firstfridays.ca/test/subjects/Careers/bsalmon.html) page.
+
+WHILE
+
+The 'careeraticle.js' holds the logic on the 
+(https://firstfridays.ca/test/subjects/Careers/careers-details.html) page.
+
+
+Both logic are quite the same. First we check if the URL has a # simbol follow by characters.
+If this is true then we know the user is either a teacher or a student, then we verify them using those characters  aka thier school ID. 
+Of course if they are not logged in this will return failed and the page won't show the contents. 
+Else if they are logged in and school exist they get a pass, else they get a fail. 
+By default students and teachers are connected to
+their school so if a school is deleted the students and teachers are deleted with it. 
+
+IF, the URL doesn't contain a # we know they are either  Home user, District or school admin.
+We verify first if they are logged in. then we check their payment ID, if it exist and valid they get a pass, else the page remains blank.
+
+
+
+SERVER LOGIC 
+All this is possible with the help of the server code, it communicate with our MongoDB database.
+The database holds all the memories of the user info, and that way we know if they are our user, and if they are subscribed or not.

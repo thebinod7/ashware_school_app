@@ -1,0 +1,144 @@
+
+<!-- Student panel -->
+<div id="modal-class" class="uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <div class="main-section reset-panel">
+            <div class="ui-box">
+               <div class="uk-flex">
+                   <div class="uk-width-1-2">
+                    <h2 class="ui-subheader">Classes</h2>
+                    <p>Here you can add material, assignment, quiz and also assign students to a specific class</p>
+                   </div>
+                   <div class="uk-width-1-2 uk-align-right">
+                      <div class="add-invite--buttons">
+                        <button type="button" uk-toggle="target: #modal-create-class" class="uk-button uk-button-default has-icon"><ion-icon name="add-outline" class="plus-icon"></ion-icon>Create class</button>
+                      </div>
+                   </div>
+               </div>
+               <div class="list-people">
+                    <ul class="tab-list" uk-tab>
+                        <li><a href="#">List of classes</a></li>
+                    </ul>
+                 <ul class="uk-switcher uk-margin" id="class-tab__list">
+                    <li>
+                        <div><ul data-pos="0" class="ui-list-blocks list-of-classes"></ul></div>
+                    </li>
+                </ul>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="modal-create-class" uk-modal="stack:true">
+    <div class="uk-modal-dialog uk-modal-body ui-modal-regular">
+        <div class="top-section">
+            <h3>Create class</h3>
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+        </div>
+       <div class="ui-modal-body">
+           <form class="create-class-form">
+               <div class="ui-form-control">
+                 <label class="uk-form-label">Class name</label>
+                 <input type="text" name="title" class="uk-input" placeholder="Enter class name" required>
+               </div>
+               <div class="ui-form-control">
+                <label class="uk-form-label">Section</label>
+                <input type="text" name="section" class="uk-input" placeholder="Enter section name">
+              </div>
+           
+            <button type="submit" class="uk-button uk-button-primary uk-width-1-1">Create</button>
+           </form>
+       </div>
+    </div>
+</div>
+
+
+<div id="edit-class" uk-modal="stack:true">
+    <div class="uk-modal-dialog uk-modal-body ui-modal-regular">
+        <div class="top-section">
+            <h3>Edit class</h3>
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+        </div>
+       <div class="ui-modal-body">
+           <form class="edit-class-form">
+               <div class="ui-form-control">
+                 <label class="uk-form-label">Class name</label>
+                 <input type="text" name="title" class="uk-input" placeholder="Enter class name" required>
+               </div>
+               <input type="hidden" name="id">
+               <div class="ui-form-control">
+                <label class="uk-form-label">Section</label>
+                <input type="text" name="section" class="uk-input" placeholder="Enter section name">
+              </div>
+
+              <div class="uk-flex">
+                  <div class="uk-width-1-2">
+                     <button type="submit" class="uk-button uk-button-primary uk-width-1-1">Update</button>
+                  </div>
+                  <div class="uk-width-1-2 uk-margin-small-left">
+                    <button type="button" class="uk-button uk-button-danger uk-width-1-1">Delete</button>
+                 </div>
+              </div>
+           </form>
+       </div>
+    </div>
+</div>
+
+
+<div id="modal-class-overview" class="hide">
+    <div class="uk-modal-dialog--alt">
+        <div class="classes-bar">
+            <div class="uk-flex">
+                <div class="uk-width-1-2">
+                    <h3 class="class-title"></h3>
+                </div>
+                <div class="uk-width-1-2 wrap-class-actions">
+                    <a href="#edit-class" uk-toggle class="uk-button uk-button-primary">Edit</a>
+                    <a href="#modal-sstudent-assign-class" uk-toggle class="uk-button uk-button-primary tik-open-assign-pop">Assign student</a>
+                    <a href="#" class="uk-button uk-button-default tik-close-class--view">Close</a>
+                </div>
+            </div>
+            <div class="uk-flex">
+                <div class="uk-width-1-2">
+                    <div class="label-structure use-grid use-2x">
+                        <span>Lesson No. <ion-icon name="information-circle-outline" uk-tooltip="title: List of lessons assigned to this class; pos: top"></ion-icon></span>
+                        <span>Link</span>
+                    </div>
+                    <ul class="classes-lessons ui-list-blocks--alt"></ul>
+                </div>
+                <div class="uk-width-1-2 uk-margin-small-left">
+                    <div class="label-structure use-grid use-2x">
+                        <span>Student name. <ion-icon name="information-circle-outline" uk-tooltip="title: List of students assigned to this class; pos: top"></ion-icon></span>
+                        <span>Revoke access</span>
+                    </div>
+                    <ul class="classes-students ui-list-blocks--alt"></ul>
+                </div>
+                <!-- <div class="uk-width-1-2">
+
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modal-sstudent-assign-class" uk-modal="stack:true">
+    <div class="uk-modal-dialog uk-modal-body ui-modal-regular">
+        <div class="top-section">
+            <h3>Assign students to this class</h3>
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+        </div>
+       <div class="ui-modal-body">
+        <div class="label-structure use-grid use-3x">
+            <span>Student name</span>
+            <span><label><input class="uk-checkbox" type="checkbox" id="all-to-assign-students"> assign all</label></span>
+            <span>Actions</span>
+        </div>
+          <ul class="assign-student-class-peeps ui-list-blocks--alt"></ul>
+       </div>
+    </div>
+</div>

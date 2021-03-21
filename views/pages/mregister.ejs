@@ -1,0 +1,104 @@
+
+
+
+<section class="auth-section">
+    <div class="left-auth__section">
+        <a href="#" class="logo-front">
+            <img src="/assets/Svg/logo.svg">
+        </a>
+        <div class="section-content ui-auth-img__bg ui-use-register__bg">
+        </div>
+        <div class="bottom-section-content">
+            <h1>Are you a District or a School admin?</h1>
+            <a href="/u/register" class="ui-link">Use this portal instead <ion-icon name="arrow-forward-circle-outline"></ion-icon></a>
+        </div>
+    </div>
+  
+
+
+    <div class="main-auth__section m-login-section">
+        <div class="auth-form ui-box-sh">
+           <div class="top-auth-form auth-container">
+            <h2>Log in</h2>
+            <p>Log in to your [brand] account
+                Forgot your password? <a href="/u/reset">Reset password</a></p>
+           </div>
+           <hr>
+           <form class="auth-container" id="member-login-form">
+             <div class="ui-alert-danger fade"><p></p></div>
+             <% if(success_msg != '') { %>
+                <div class="ui-alert-success">
+                    <p> <%= success_msg %></p>
+                  </div>
+              <% } %>
+
+                <label class="uk-form-label">Email</label>
+                <input type="email" class="uk-input" placeholder="Enter email address" name="email" required>
+ 
+                <label class="uk-form-label">Password</label>
+                <input type="password" class="uk-input" placeholder="Enter password" name="password" required>
+               
+                <label class="uk-form-label">Your role</label>
+                <select name="role" class="uk-select">
+                    <option value="Teacher">Teacher</option>
+                    <option value="Student">Student</option>
+                </select>
+               <div>
+                <button type="submit" class="uk-button uk-button-primary uk-width-1-1 uk-margin-top">Log in</button>
+            </div>
+          </form>
+        </div>
+    </div>
+</section>
+
+
+
+
+<script>
+
+function revealErr(dom, err){
+    dom.querySelector('.ui-alert-danger').classList.remove('fade')
+    dom.querySelector('.ui-alert-danger p').innerHTML = err
+}
+
+
+const memberLogForm = document.querySelector('#member-login-form')
+
+
+  memberLogForm.addEventListener('submit', (e) => {
+      e.preventDefault()
+    fetch('/u/member-login', {
+            method: 'post',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({
+               email: memberLogForm['email'].value,
+               password: memberLogForm['password'].value,
+               role: memberLogForm['role'].value
+            })  
+        }).then(res => {
+            return res.json()
+        }).then(res => {
+            if(!res.doc){
+                revealErr(memberLogForm, 'Incorrect email or password!')
+            }
+            if(res.doc){                
+               if(memberLogForm['role'].value == 'Teacher'){
+                res.doc.teachers.forEach(el => {
+                        if(memberLogForm['email'].value == el.email){
+                            location.href = `/app/${res.doc._id}@${el._id}URLT${memberLogForm['role'].value}`
+                        }
+                    })
+               } else {
+                    res.doc.students.forEach(el => {
+                        if(memberLogForm['email'].value == el.email){
+                            location.href = `/app/${res.doc._id}@${el._id}URLT${memberLogForm['role'].value}`
+                        }
+                    })
+               }
+            }
+        })
+  })
+
+</script>

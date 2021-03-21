@@ -1,0 +1,147 @@
+<section class="role-selector-section">
+  <h1>Select account type</h1>
+
+  <div class="role-selectors use-grid use-2x">
+    <div class="select-type">
+      <div class="select-type-selector select-type-selector-active" id="r1">
+        <span class="ui-checkcircle active-ui-ccbox"></span>
+        <span class="title">District admin</span>
+        <p>District admin manages shool billing and all neccessary functions</p>
+      </div>
+      <div class="select-type-selector" id="r2">
+        <div class="ui-checkcircle"></div>
+        <span class="title">School admin</span>
+        <p>
+          District admin manages shool billing and all neccessary functions.
+        </p>
+      </div>
+    </div>
+    <div class="select-type">
+      <div class="select-type-selector" id="r3">
+        <span class="ui-checkcircle"></span> <span class="title">Parent</span>
+        <p>
+          District admin manages shool billing and all neccessary functions.
+        </p>
+      </div>
+      <div class="select-type-selector" id="r4">
+        <div class="ui-checkcircle"></div>
+        <span class="title">Trial account</span>
+        <p>
+          District admin manages shool billing and all neccessary functions.
+        </p>
+      </div>
+    </div>
+  </div>
+  <form class="center-container" id="role-form">
+    <div class="ui-alert-danger fade"><p></p></div>
+    <div class="uk-flex input-school-admin-register fade">
+      <div class="uk-width-1-2 uk-margin-right">
+        <label
+          class="uk-form-label"
+          uk-tooltip="To register as a school admin you are required to provide your school district ID. This should be provide to you by the district admin. If your school doesn't have a district account yet, make them register one or you can just register as the district admin."
+          >District ID <ion-icon name="help-circle-outline"></ion-icon
+        ></label>
+        <input
+          type="text"
+          class="uk-input"
+          name="districtid"
+          placeholder="Enter school district ID"
+        />
+      </div>
+      <div class="uk-width-1-2">
+        <label class="uk-form-label">School name</label>
+        <input
+          type="text"
+          class="uk-input"
+          name="schoolname"
+          placeholder="Enter school name"
+        />
+      </div>
+    </div>
+    <input type="hidden" name="role" id="role-value" value="District admin" />
+    <button
+      type="submit"
+      class="uk-button uk-button-primary uk-width-1-1 uk-margin-top"
+    >
+      Save and procceed
+    </button>
+  </form>
+</section>
+
+<script>
+  const userSelectRole = document.querySelector('#role-value');
+  const districtIdnName = document.querySelector(
+    '.input-school-admin-register'
+  );
+  const roleForm = document.querySelector('#role-form');
+
+  const activeSelectorRole = () => {
+    document.querySelectorAll('.select-type-selector').forEach((el) => {
+      el.classList.remove('select-type-selector-active');
+      el.querySelector('.ui-checkcircle').classList.remove('active-ui-ccbox');
+    });
+  };
+
+  document.querySelectorAll('.select-type-selector').forEach((el) => {
+    el.addEventListener('click', (r) => {
+      activeSelectorRole();
+      el.classList.add('select-type-selector-active');
+      el.querySelector('.ui-checkcircle').classList.add('active-ui-ccbox');
+      userSelectRole.value = el.querySelector('.title').innerHTML;
+      el.id === 'r2'
+        ? districtIdnName.classList.remove('fade')
+        : districtIdnName.classList.add('fade');
+      roleForm.querySelector('.ui-alert-danger').classList.add('fade');
+    });
+  });
+
+  function revealErr(err) {
+    roleForm.querySelector('.ui-alert-danger').classList.remove('fade');
+    roleForm.querySelector('.ui-alert-danger p').innerHTML = err;
+  }
+
+  roleForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    if (roleForm['role'].value == 'School admin') {
+      if (
+        roleForm['districtid'].value == '' ||
+        roleForm['schoolname'].value == ''
+      ) {
+        revealErr('This field can not be empty');
+        return;
+      }
+    }
+
+    if (roleForm['role'].value == 'School admin') {
+      fetch('/validate-districtid', {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ districtid: roleForm['districtid'].value }),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          if (res.fail) return revealErr(res.fail);
+          saveRole();
+        });
+    } else {
+      saveRole();
+    }
+
+    function saveRole() {
+      fetch('/save-role', {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          role: roleForm['role'].value,
+          districtid: roleForm['districtid'].value,
+          schoolname: roleForm['schoolname'].value,
+        }),
+      }).then((res) => {
+        location.href = '/app';
+      });
+    }
+  });
+</script>

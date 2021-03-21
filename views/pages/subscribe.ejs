@@ -1,0 +1,172 @@
+
+<title>FlexyQ - Start your free 14 days</title>
+<link rel="stylesheet" href="/css/stripe.css">
+
+<script src="https://js.stripe.com/v3/"></script>
+<div class="sr-root">
+    <div class="sr-main">
+      <header class="sr-header">
+        <img src="/assets/Svg/logo.svg">
+      </header>
+
+      <div class="sr-payment-summary payment-view">
+        <h1 class="order-amount">Ashaware Membership</h1>
+        <span class="commit">No commitments. Cancel anytime.</span>
+      </div>
+     
+      <form id="payment-form">
+        <div class="sr-payment-form payment-view">
+          <div class="sr-form-row">
+            <label for="card-element">Payment details</label>
+            <div class="sr-combo-inputs">
+              <div class="sr-combo-inputs-row">
+                <div class="sr-input sr-card-element" id="card-element"></div>
+              </div>
+            </div>
+            <div class="sr-field-error" id="card-errors" role="error"></div>
+          </div>
+          <button id="submit" class="button btn-fill">
+            <div id="spinner" class="hidden"></div>
+            <span id="button-text">Pay to continue</span>
+          </button>
+          <div class="sr-legal-text">
+            Your card will be charged immediately upon completion
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="sr-content">
+      <div class="pasha-image-stack">
+       <div class="billing-circle">
+       <div>
+        <strong>Billing cycle</strong>
+        <span>
+         <label>Monthly</label>
+         <input type="checkbox" id="switch-plan" class="toggle"/>
+        <label>Yearly</label>
+        </span>
+       </div>
+       </div>
+        <section class="ui-price-main" id="pricing">
+          <div class="price-wrapper">
+            <div class="price-main__top">
+                <h1>What's included?</h1>
+                <h4>Everything you need to run your school activities smooth an efficient</h4>
+            </div>
+            <div class="price-section use-3x">
+                <div class="price-tag">
+                    <div class="top-tag__cta">
+                        <h1 id="monthly-plan"><span>$</span>9.99<small>/mo</small></h1>
+                        <h1 id="yearly-plan" class="hidden"><span>$</span>99<small>/yr</small></h1>
+                    </div>
+                    <div class="bottom-tag__list">
+                        <h4>Up to 2.000 Students</h4>
+                        <ul>
+                            <li>Teacher / Student registration</li>
+                            <li>School mamagement</li>
+                            <li>Reports</li>
+                            <li>Content access</li>
+                            <li>and more..</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+
+
+
+let stripe = Stripe('pk_test_LjmoWX4EHzWUgd3EUTETOksP');
+let elements = stripe.elements()
+const displayError = document.getElementById('card-errors');
+
+let style = {
+    base: {
+      iconColor: '#666EE8',
+      color: '#31325F',
+      fontWeight: 300,
+      fontSize: '15px',
+      '::placeholder': {
+        color: '#CFD7E0',
+      },
+    },
+  }
+
+let card = elements.create("card", { style: style });
+card.mount('#card-element');
+card.on('change', ({error}) => {
+  if (error) {
+    displayError.textContent = error.message;
+  } else {
+    displayError.textContent = '';
+  }
+});
+
+
+const changeLoadingState = function(isLoading) {
+  if (isLoading) {
+    document.querySelector('#spinner').classList.add('loading');
+    document.querySelector('button').disabled = true;
+
+    document.querySelector('#button-text').classList.add('hidden');
+  } else {
+    document.querySelector('button').disabled = false;
+    document.querySelector('#spinner').classList.remove('loading');
+    document.querySelector('#button-text').classList.remove('hidden');
+  }
+};
+
+const switchPlan = document.querySelector('#switch-plan')
+
+switchPlan.addEventListener('change', () => {
+  if(switchPlan.checked){
+    document.querySelector('#monthly-plan').classList.add('hidden')
+    document.querySelector('#yearly-plan').classList.remove('hidden')
+  } else {
+     document.querySelector('#monthly-plan').classList.remove('hidden')
+     document.querySelector('#yearly-plan').classList.add('hidden')
+  }
+})
+
+
+const paymentForm = document.querySelector('#payment-form')
+
+
+paymentForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    stripe.createPaymentMethod('card', card, {}).then((result) => {
+        if (result.error) {
+            changeLoadingState(false);
+        } else {
+            changeLoadingState(true);
+            fetch('/confirm-payment', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    paymentId: result.paymentMethod.id,
+                    when: switchPlan.checked ? 'yearly' : 'monthly'
+                })  
+            }).then(res => {
+                return res.json()
+            }).then(res => {
+              if(res.failed){
+                displayError.textContent  = res.failed.message
+              }
+              if(res.success){
+                changeLoadingState(false);
+                location.reload()
+              }
+            })
+          }
+        });
+})
+  </script>
+

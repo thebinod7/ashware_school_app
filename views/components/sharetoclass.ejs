@@ -1,0 +1,95 @@
+
+<% if(user && user.schoolid){ %>
+    <form class="share-to-class">
+        <div class="inner-container">
+            <h1>Share to Classroom</h1>
+            <select class="uk-select" id="share-to-classroom-select" data-role="<%= user.role %>" data-gr="<%= user.schoolid %>"></select>
+           <button class="uk-button uk-button-primary" type="submit">Assign class</button>
+           <div class="ui-alert-success hide uk-margin-top">
+            <p>Lesson assigned successfully!</p>
+          </div>
+        </div>
+    </form>
+<% } else { %>
+    <div class="unauth-render-img">
+        <img src="/assets/Svg/9-01.svg">
+        <h3>User Authentication required!</h3>
+    </div>
+    
+<% } %>
+
+
+
+
+
+
+<script>
+
+
+
+const classshareForm = document.querySelector('.share-to-class')
+const sharetoClass = document.querySelector('#share-to-classroom-select')
+
+if(sharetoClass.dataset.role == 'Teacher')  {
+    fetch('/get-single-school', {
+            method: 'post',
+            headers: {
+               'Content-Type': 'application/json' 
+              },
+            body: JSON.stringify({ 
+                schoolid: sharetoClass.dataset.gr
+            })  
+        }).then(res => {
+            return res.json()
+        }).then(res => {
+         sharetoClass.innerHTML = ''
+          res.doc.classes.forEach(el => {
+            let option = document.createElement('option')
+            option.innerHTML = el.name
+            option.value = el._id
+            sharetoClass.appendChild(option)
+          })
+      })
+    
+} else {
+    alert('More Authentication needed! User must be a Teacher');
+    classshareForm.classList.add('hide')
+}
+// function renderClassesOptions(){
+
+// }
+// renderClassesOptions()
+
+
+let url_string = window.location.href
+let url = new URL(url_string);
+
+
+
+classshareForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    if(sharetoClass.value == '') return alert('Please select a class');
+
+    fetch('/assign-lesson-class', {
+            method: 'post',
+            headers: {
+               'Content-Type': 'application/json' 
+              },
+            body: JSON.stringify({ 
+                schoolid: sharetoClass.dataset.gr,
+                classId: sharetoClass.value,
+                url: url.search.split('=')[1]
+            })  
+        }).then(res => {
+            return res.json()
+        }).then(res => {
+            document.querySelector('.ui-alert-success').classList.remove('hide')
+    })
+})
+
+
+</script>
+
+
+
+

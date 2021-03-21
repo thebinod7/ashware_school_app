@@ -1,0 +1,304 @@
+<script src="https://js.stripe.com/v3/"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+  integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"
+  integrity="sha512-rKFvwjvE4liWPlFnvH4ZhRDfNZ9FOpdkD/BU5gAIA3VS3vOQrQ5BjKgbO3kxebKhHdHcNUHLqxQYSoxee9UwgA=="
+  crossorigin="anonymous"
+></script>
+
+<div id="user-role--g" class="hide"><%= user.role %></div>
+<div id="school_id"><%= user.schoolid %></div>
+
+<div class="preloader hide">
+  <div class="preloader-container">
+    <div uk-spinner></div>
+  </div>
+</div>
+
+<div class="ui-topbar-app">
+  <div class="bar-items use-grid">
+    <a href="#" class="admin-logo"> </a>
+    <div class="item-list-tb">
+      <div class="uk-inline">
+        <span class="uk-form-icon" uk-icon="icon: search"></span>
+        <input
+          class="uk-input"
+          type="text"
+          id="custom-search"
+          placeholder="Search anything..."
+        />
+        <i class="in-search hide"
+          ><a href="#"></a> <ion-icon name="close-outline"></ion-icon
+        ></i>
+      </div>
+      <div class="search-criteria hide">
+        <h3>
+          Search category
+          <span><ion-icon name="close-outline"></ion-icon></span>
+        </h3>
+        <a href="#" data-el="schools">Schools in district</a>
+        <a href="#" data-el="teachers">Teachers in school</a>
+        <a href="#" data-el="students">Students in school</a>
+        <a href="#" data-el="classes">Classes in school</a>
+      </div>
+    </div>
+    <div class="item-list-tb-right">
+      <% if(user.role == 'District admin'){ %>
+      <select class="uk-select" id="distadmin-schools"></select>
+      <% } else if(user.role !== 'Parent') { %>
+      <a
+        href="#modal-create-class"
+        uk-toggle
+        class="uk-button uk-button-default tik-create-class"
+        >Create class</a
+      >
+      <div class="hide reveal-on-student"></div>
+      <% } %>
+      <a
+        href="#"
+        uk-toggle="target: .ui-uplaceholder-wrap"
+        class="ui-uplaceholder"
+        ><div></div
+      ></a>
+
+      <div class="ui-uplaceholder-wrap" hidden>
+        <div class="ui-uplaceholder-list-top">
+          <p>Welcome,</p>
+          <h3><%= user.fullname %></h3>
+        </div>
+        <div class="ui-uplaceholder-list-bottom">
+          <a href="#modal-account" uk-toggle
+            ><ion-icon name="person-circle-outline"></ion-icon>
+            <span>Account</span></a
+          >
+          <a href="#modal-subscription" class="subscription-link" uk-toggle
+            ><ion-icon name="trophy-outline"></ion-icon>
+            <span>Subscription</span></a
+          >
+          <a href="/u/logout"
+            ><ion-icon name="log-out-outline"></ion-icon>
+            <span>Log out</span></a
+          >
+          <div class="uk-margin">
+            <div class="uk-inline">
+              <p>You can can use this code as your support PIN</p>
+              <div class="ui-upd-list-bottom-extreme">
+                <input
+                  class="uk-input"
+                  type="text"
+                  value="<%= user.districtid %>"
+                  id="district-copy-id"
+                />
+                <span class="copy-brand-code"
+                  ><ion-icon name="enter-outline"></ion-icon>
+                  <span>Copy</span></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ui-sidebar"><%- include('./components/navlist') -%></div>
+
+<%- include('./components/dash') -%> <%- include('./pages/account') -%> <%-
+include('./pages/schools') -%> <%- include('./pages/teachers') -%> <%-
+include('./pages/students') -%> <%- include('./pages/classes') -%> <%-
+include('./pages/lessonassigned') -%> <%- include('./components/account_plan')
+-%>
+
+<div id="ip-div"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.1"></script>
+<script src="/src/index.js"></script>
+<script>
+  // Usage
+
+  // getUserIP(function(ip){
+
+  //        let intval = setInterval(() => {
+  //          if(ip) {
+  //            clearInterval(intval)
+  //            getIPaddress(ip)
+  //          }
+  //        }, 1000);
+  //     })
+
+  //   function getIPaddress(ipp){
+  //          queryIP(ipp)
+  //   }
+
+  function queryIP(ipd) {
+    let role = document.querySelector('#user-role--g').textContent;
+    fetch('/check-ip', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ipaddress: ipd,
+        role: role,
+        plan:
+          role == 'Teacher'
+            ? ''
+            : role == 'Student'
+            ? ''
+            : document.querySelector('#plan-carrier').dataset.plan,
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => console.log(res));
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    queryIP('none');
+
+    // let uirole = document.querySelector('#user-role--g')
+    // const customSearch = document.querySelector('#custom-search')
+
+    // let districtCopyId = document.querySelector('#district-copy-id'),
+    // searchCriteria = document.querySelector('.search-criteria'),
+    // inSearch = document.querySelector('.in-search')
+
+    // let schid = uirole.textContent == 'District admin' ?
+    // document.querySelector('#distadmin-schools').value : document.querySelector('#school_id').textContent
+
+    // let schoolSearch = [], teacherSearch = [], studentSearch = [], classSearch = [],
+    // globalDOC, portal, searching = false, tabElement, searchType
+
+    // fetch('/get-multiple-school', {
+    //       method: 'post',
+    //       headers: { 'Content-Type': 'application/json' },
+    //       body: JSON.stringify({
+    //         districtid: districtCopyId.value
+    //       })
+    //   }).then(res => {
+    //       return res.json()
+    // }).then(res => {
+    //     globalDOC = res.doc
+    //    res.doc.forEach(sch => {
+    //      schoolSearch.push({
+    //        name: sch.schoolname,
+    //        id: sch._id
+    //      })
+    //    })
+    //    //@Filter based on school Id
+    //    const useSchool = res.doc.filter(el => el._id == schid)
+
+    //   // console.log(useSchool[0]);
+    //    useSchool[0].teachers.forEach(el => {
+    //      teacherSearch.push({
+    //        name: el.fullname,
+    //        id: el._id
+    //      })
+    //    })
+    //    useSchool[0].students.forEach(el => {
+    //      studentSearch.push({
+    //        name: el.fullname,
+    //        id: el._id
+    //      })
+    //    })
+    //    useSchool[0].classes.forEach(el => {
+    //      classSearch.push({
+    //        name: el.name,
+    //        id: el._id
+    //      })
+    //    })
+
+    // })
+
+    // customSearch.addEventListener('click', () => {
+    //   if(searching == true) return
+    //   searchCriteria.classList.remove('hide')
+    // })
+
+    // searchCriteria.querySelector('h3 span').addEventListener('click', () => searchCriteria.classList.add('hide'))
+    // inSearch.addEventListener('click', () => {
+    //   searching = false
+    //   inSearch.classList.add('hide')
+    //   portal = []
+    // })
+
+    // searchCriteria.querySelectorAll('a').forEach(elem => {
+    //   elem.addEventListener('click', (e) => {
+    //     e.preventDefault()
+    //     inSearch.querySelector('a').innerHTML = `in ${elem.dataset.el}`
+    //     inSearch.classList.remove('hide')
+    //     searchCriteria.classList.add('hide')
+    //     searchType = elem.dataset.el
+    //     scrollToTab(elem.dataset.el)
+    //   })
+    // })
+
+    // function scrollToTab(tab){
+    //   searching = true
+    //   if(tab == 'schools'){
+    //     UIkit.modal('#modal-school').show()
+    //     portal = schoolSearch
+    //     tabElement = document.querySelector('#school-tab__list')
+    //   } else if(tab == 'teachers'){
+    //     UIkit.modal('#modal-teacher').show()
+    //     portal = teacherSearch
+    //     tabElement = document.querySelector('#teacher-tab__list')
+    //   } else if(tab == 'students'){
+    //     UIkit.modal('#modal-student').show()
+    //     portal = studentSearch
+    //     tabElement = document.querySelector('#student-tab__list')
+    //   } else if(tab == 'classes'){
+    //     UIkit.modal('#modal-class').show()
+    //     portal = classSearch
+    //     tabElement = document.querySelector('#class-tab__list')
+    // }
+
+    //   waitPortal()
+    // }
+
+    // const waitPortal = () => {
+    // const options = { includeScore: true, keys: ['name', 'tags']}
+    // const fuse = new Fuse(portal, options)
+
+    // //@Search event lister
+    // customSearch.addEventListener('keyup', () => {
+    //    if(searching == false) return
+    //     const result = fuse.search(customSearch.value)
+
+    //     tabElement.querySelectorAll('li div ul li').forEach(el => {
+    //       el.classList.add('hide')
+    //       if(customSearch.value == '') return el.classList.remove('hide')
+
+    //       result.forEach(al => {
+    //         if(al.item.name === el.querySelector('span').textContent){
+    //           el.classList.remove('hide')
+    //           if(searchType == 'classes') return
+
+    //           //@Show / Toggle Tab
+    //           if(el.parentElement.dataset.pos == 0){
+    //             UIkit.switcher(tabElement).show(0);
+    //             tabElement.previousElementSibling.querySelectorAll('li').forEach(prelsib => {
+    //               prelsib.classList.remove('uk-active')
+    //              if(prelsib.querySelector('a').textContent == 'Active') return prelsib.classList.add('uk-active')
+    //             })
+    //           } else {
+    //             UIkit.switcher(tabElement).show(1);
+    //             tabElement.previousElementSibling.querySelectorAll('li').forEach(prelsib => {
+    //              prelsib.classList.remove('uk-active')
+    //              if(prelsib.querySelector('a').textContent == 'Pending') return prelsib.classList.add('uk-active')
+    //             })
+    //           }
+
+    //         }
+    //       })
+    //     })
+    //   })
+    // }
+  });
+</script>

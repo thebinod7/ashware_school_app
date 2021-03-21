@@ -1,0 +1,60 @@
+
+
+<div id="modal-subscription" uk-modal="stack:true">
+    <div class="uk-modal-dialog uk-modal-body">
+        <form class="ui-modal-body">
+            <div class="ui-top-modal-section">
+                <h3>My Subscription</h3>
+                <button class="uk-modal-close-default" type="button" uk-close></button>
+            </div>
+           <div class="ui-modal-wrapper">
+            <div class="ui-subscription-panel">
+                <div class="top-level-subscription">
+                    <div>
+                        <h4 class="item-plan-sub">Ashaware Membership</h4>
+                        <h5>Single user</h5>
+                    </div>
+                    <div>
+                        <h4>Renewal</h4>
+                        <h5 class="subscription-renewal-text"></h5>
+                    </div>
+                    <div>
+                        <h4>Auto Renewal</h4>
+                        <input type="checkbox" disabled checked class="toggle">
+                    </div>
+                </div>
+                <div class="bottom-level-subscription">
+                    <p>Download Invoice <a href="" target="_blank" class="invoice-link">View and download your subscription invoice here</a></p>
+                </div>
+            </div>
+           </div>
+            <div class="ui-bottom-modal-section uk-flex">
+                <div class="uk-width-1-2">
+                    <button type="button" uk-toggle="target: #modal-cancel-plan" class="uk-button uk-button-danger">Cancel my subscription</button>
+                </div>
+                <div class="uk-width-1-2 uk-margin-small-left">
+                </div>
+            </div>
+       </form>
+    </div>
+ </div>
+
+
+ <div id="modal-cancel-plan" uk-modal="stack:true">
+    <div class="uk-modal-dialog uk-modal-body ui-modal-regular ui-modal-alert">
+        <div class="top-section">
+            <h3>Cancel subscription</h3>
+        </div>
+       <div class="ui-modal-body">
+        <p>Are you sure you want to cancel your account? Keep in mind that this action can not be reversed.</p>
+        <div class="uk-flex">
+            <div class="uk-width-1-2">
+                <button class="uk-button uk-modal-close uk-button-default" type="button">Cancel</button>
+            </div>
+            <div class="uk-width-1-2">
+                <button class="uk-button uk-button-danger tik-cancel-plan" type="button">Yes, I'm certain</button>
+            </div>
+        </div>
+       </div>
+    </div>
+</div>

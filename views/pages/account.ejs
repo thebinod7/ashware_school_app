@@ -1,0 +1,158 @@
+
+
+
+
+
+<div id="modal-account" class="uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <form class="main-section reset-panel" id="main-account-settings">
+            <!-- <div class="ui-header">Account Settings</div> -->
+            <div class="ui-box">
+               <div class="uk-flex">
+                   <div class="uk-width-1-2">
+                    <h2 class="ui-subheader">Account settings</h2>
+                    <p>Your can only make changes to un-restricted details, the disabled fields can not be modified or deleted!</p>
+                   </div>
+                   <div class="uk-width-1-2 uk-align-right">
+                       <button class="uk-button uk-button-primary">Save account settings</button>
+                   </div>
+               </div>
+              
+                <div class="account-settings uk-margin-top" uk-grid>
+                    <div class="uk-width-1-2">
+                        <div class="ui-form-control uk-margin-bottom">
+                            <label class="uk-form-label">Full name</label>
+                            <input type="text" class="uk-input" name="fullname" value="<%= user.fullname %>">
+                        </div>
+                       <% if(user.role == 'Student' || user.role == 'Teacher'){ %>
+                        <div class="ui-form-control uk-margin-bottom">
+                            <label class="uk-form-label">Email address</label>
+                            <input type="text" class="uk-input" name="email" value="<%= user.email %>" disabled>
+                        </div>
+                        <% } else { %>
+                            <div class="ui-form-control uk-margin-bottom">
+                                <label class="uk-form-label">Email address</label>
+                                <input type="text" data-plan="<%= user.planid %>" id="plan-carrier" class="uk-input" name="email" value="<%= user.email %>">
+                            </div>
+                       <% } %>
+                      
+                        <% if(user.role != 'District admin'){ %>
+                            <div class="ui-form-control uk-margin-bottom sch-name">
+                                <label class="uk-form-label">School name</label>
+                                <input type="text" class="uk-input" name="schoolname" value="<%= user.schoolname %>" disabled>
+                            </div>
+                        <% } else { %>
+                            <input type="hidden" class="uk-input" name="schoolname">
+                            <div class="ui-form-control uk-margin-bottom dst-id">
+                                <label class="uk-form-label">District ID</label>
+                                <input type="text" class="uk-input" name="districtid" value="<%= user.districtid %>" disabled>
+                            </div>
+                        <% } %>
+                        
+                      
+                        <div class="ui-form-control uk-margin-bottom">
+                            <label class="uk-form-label">Account type</label>
+                            <input type="text" class="uk-input" name="role" value="<%= user.role %>" disabled>
+                        </div>
+                        <div class="ui-form-control uk-margin-bottom user-preference">
+                            <% if(user.role != 'Student' && user.role != 'Teacher'){ %>
+                                <p><input class="toggle" name="notify" type="checkbox"> Nofify me on teacher and student registration request</p>
+                            <% } %>
+                        </div>
+                        <input type="hidden" name="userid" value="<%= user._id %>">
+                        <div class="ui-form-control uk-margin-bottom">
+                            <p><strong>Reset Account Password</strong></p>
+                            <p>Using the rest password page you can request a password rest link</p>
+                            <br>
+                            <a href="/u/reset" target="_blank" class="ui-link">Send password reset link <ion-icon name="arrow-forward-circle-outline"></ion-icon></a>
+                        </div>
+                    </div>
+                    <div class="uk-width-1-2"></div>
+                </div>
+                <div class="uk-flex uk-margin-top">
+                    <div class="uk-width-1-3"></div>
+                    <div class="uk-width-1-3"></div>
+                    <div class="uk-width-1-3 delete-account-section">
+                        <button class="uk-button-danger uk-button" uk-toggle="target: #modal-delete-account" type="button">Delete account</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Alert delete account -->
+<div id="modal-delete-account" uk-modal="stack:true">
+    <div class="uk-modal-dialog uk-modal-body ui-modal-regular ui-modal-alert">
+        <div class="top-section">
+            <h3>Delete account</h3>
+        </div>
+       <div class="ui-modal-body">
+        <p>Are you sure you want to delete your account? Keep in mind that this action can not be reversed.</p>
+        <div class="uk-flex">
+            <div class="uk-width-1-2">
+                <button class="uk-button uk-modal-close uk-button-default" type="button">Cancel</button>
+            </div>
+            <div class="uk-width-1-2">
+                <button class="uk-button uk-button-danger tik-account-delete" type="button">Yes, I'm certain</button>
+            </div>
+        </div>
+       </div>
+    </div>
+</div>
+
+
+
+
+
+<div id="modal-edit-accounts" uk-modal="stack:true">
+    <div class="uk-modal-dialog uk-modal-body ui-modal-regular">
+        <div class="top-section">
+            <h3>Edit account</h3>
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+        </div>
+       <div class="ui-modal-body">
+           <form>
+               <div class="uk-flex">
+                   <div class="uk-width-1-2 uk-margin-small-right">
+                    <div class="ui-form-control uk-margin-small-bottom">
+                        <label class="uk-form-label">Full name</label>
+                        <input type="text" class="uk-input" name="fullname" placeholder="Enter full name" required>
+                    </div>
+                   </div>
+                   <div class="uk-width-1-2">
+                    <div class="ui-form-control uk-margin-small-bottom">
+                        <label class="uk-form-label">Email address</label>
+                        <input type="text" class="uk-input" name="email" disabled>
+                    </div>
+                   </div>
+               </div>
+               <div class="uk-flex">
+                <div class="uk-width-1-2 uk-margin-small-right">
+                 <div class="ui-form-control uk-margin-small-bottom">
+                     <label class="uk-form-label">Role</label>
+                     <input type="text" class="uk-input" name="role" disabled>
+                 </div>
+                </div>
+                <div class="uk-width-1-2">
+                 <div class="ui-form-control uk-margin-small-bottom">
+                     <label class="uk-form-label">Status</label>
+                     <select name="status" class="uk-select">
+                        <option value="active">active</option>
+                        <option value="pending">pending</option>
+                    </select>
+                 </div>
+                </div>
+            </div>
+            <input type="hidden" name="id">
+            <div class="ui-form-control uk-margin-small-bottom">
+                <label class="uk-form-label">About this person</label>
+                <textarea name="about" class="uk-textarea" rows="4" placeholder="Write something about this user..."></textarea>
+            </div>
+           
+            <button type="submit" class="uk-button uk-button-primary uk-width-1-1">Save changes</button>
+           </form>
+       </div>
+    </div>
+</div>
+

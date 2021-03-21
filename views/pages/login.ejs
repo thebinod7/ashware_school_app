@@ -1,0 +1,68 @@
+<section class="auth-section">
+  <div class="left-auth__section">
+    <a href="#" class="logo-front">
+      <img src="/assets/Svg/logo.svg" />
+    </a>
+    <div class="section-content ui-auth-img__bg ui-use-login__bg"></div>
+    <!-- <div class="bottom-section-content">
+            <h1>Are you a Teacher or a student?</h1>
+            <a href="/u/member-login" class="ui-link">Use this portal instead <ion-icon name="arrow-forward-circle-outline"></ion-icon></a>
+        </div> -->
+  </div>
+
+  <div class="main-auth__section">
+    <div class="auth-form ui-box-sh">
+      <div class="top-auth-form auth-container">
+        <h2>Log in</h2>
+        <p>
+          Log in to your [brand] account Forgot your password?
+          <a href="/u/reset">Reset password</a>
+        </p>
+      </div>
+      <hr />
+      <form class="auth-container" method="POST" action="/u/login">
+        <% if(error_msg != '') { %>
+        <div class="ui-alert-danger">
+          <p><%= error_msg %></p>
+        </div>
+        <% } %> <% if(error != '') { %>
+        <div class="ui-alert-danger">
+          <p><%= error %></p>
+        </div>
+        <% } %> <% if(success_msg != '') { %>
+        <div class="ui-alert-success">
+          <p><%= success_msg %></p>
+        </div>
+        <% } %>
+
+        <label class="uk-form-label">Email</label>
+        <input
+          type="email"
+          class="uk-input"
+          placeholder="Enter email address"
+          name="email"
+        />
+
+        <label class="uk-form-label">Password</label>
+        <input
+          type="password"
+          class="uk-input"
+          placeholder="Enter password"
+          name="password"
+        />
+
+        <div>
+          <button
+            type="submit"
+            class="uk-button uk-button-primary uk-width-1-1 uk-margin-top"
+          >
+            Log in
+          </button>
+          <p>
+            Don't have an account? <a href="/u/register">Create an account</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

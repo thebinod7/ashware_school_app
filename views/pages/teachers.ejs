@@ -1,0 +1,114 @@
+
+
+<!-- Teacher panel -->
+<div id="modal-teacher" class="uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <div class="main-section reset-panel">
+            <!-- <div class="ui-header">List of Teachers</div> -->
+            <div class="ui-box">
+               <div class="uk-flex">
+                   <div class="uk-width-1-2">
+                    <h2 class="ui-subheader">Teachers</h2>
+                    <p>List of pending and active teachers, you can invite and grant access to teachers with pending status.</p>
+                   </div>
+                   <div class="uk-width-1-2 uk-align-right">
+                       <button type="button" class="uk-button uk-button-primary tik-invite-teachers">Invite teachers</button>
+                   </div>
+               </div>
+               <div class="list-people">
+                    <ul class="tab-list" uk-tab>
+                        <li><a href="#">Active</a></li>
+                        <li><a href="#">Pending</a></li>
+                    </ul>
+                 <ul class="uk-switcher uk-margin" id="teacher-tab__list">
+                    <li>
+                        <div><ul data-pos="0" class="ui-list-blocks active-teachers"></ul></div>
+                    </li>
+                    <li>
+                        <div><ul data-pos="1" class="ui-list-blocks pending-teachers"></ul></div>
+                    </li>
+                </ul>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Invite Teachers -->
+<div id="modal-invite-teachers" uk-modal="stack:true">
+    <div class="uk-modal-dialog uk-modal-body ui-modal-regular">
+        <div class="top-section">
+            <h3>Invite teachers</h3>
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+        </div>
+       <div class="ui-modal-body">
+           <form class="invite-teach-form">
+            <label class="uk-form-label">Teachers email</label>
+            <textarea class="uk-textarea" name="email" rows="5" placeholder="ex. emma@gmail.com, jerryshark@outlook.com, saragab@company.com..." required></textarea>
+            <button type="submit" class="uk-button uk-button-primary uk-width-1-1">Invite</button>
+           </form>
+       </div>
+    </div>
+</div>
+
+
+<!-- Success after Invite -->
+<div id="modal-success-teachers" uk-modal="stack:true">
+    <div class="uk-modal-dialog uk-modal-body ui-modal-regular ui-modal-alert">
+        <div class="top-section">
+            <h3>Hurray!</h3>
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+        </div>
+       <div class="ui-modal-body">
+           <div class="ui-static-success">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+              <h3>Invitation sent!</h3>
+              <p>Their details will appear on the teachers panel when they register an account</p>
+           </div>
+       </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div id="modal-delete-teacher" uk-modal="stack:true">
+    <div class="uk-modal-dialog uk-modal-body ui-modal-regular ui-modal-alert">
+        <div class="top-section">
+            <h3>Delete teacher</h3>
+        </div>
+       <div class="ui-modal-body">
+        <p>Are you sure you want to delete this teacher? Keep in mind that this action can not be reversed.</p>
+        <div class="uk-flex">
+            <div class="uk-width-1-2">
+                <button class="uk-button uk-modal-close uk-button-default" type="button">Cancel</button>
+            </div>
+            <div class="uk-width-1-2">
+                <button class="uk-button uk-button-danger tik-delete-teacher" type="button">Yes, I'm certain</button>
+            </div>
+        </div>
+       </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="ui-alert-success-fixed hide">
+    <p><ion-icon name="checkmark-circle"></ion-icon> <span class="ui-alert-msg">Success now</span> </p>
+</div>
+<div class="ui-alert-error-fixed hide">
+    <p><ion-icon name="alert-circle-outline"></ion-icon> <span class="ui-alert-msg"></span> </p>
+</div>

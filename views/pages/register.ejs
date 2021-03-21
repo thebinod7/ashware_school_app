@@ -1,0 +1,72 @@
+<section class="auth-section">
+  <div class="left-auth__section">
+    <a href="#" class="logo-front">
+      <img src="/assets/Svg/logo.svg" />
+    </a>
+    <div class="section-content ui-auth-img__bg ui-use-register__bg"></div>
+    <!-- <div class="bottom-section-content">
+            <h1>Are you a Teacher or a student?</h1>
+            <a href="/u/member-login" class="ui-link">Use this portal instead <ion-icon name="arrow-forward-circle-outline"></ion-icon></a>
+        </div> -->
+  </div>
+  <div class="main-auth__section">
+    <div class="auth-form ui-box-sh">
+      <div class="top-auth-form auth-container">
+        <h2>Sign up</h2>
+        <p>
+          Setting up an account is quick and straight-forward. Already signed
+          up? <a href="/u/login">Log in</a>
+        </p>
+      </div>
+      <hr />
+      <form class="auth-container" method="POST" action="/u/register">
+        <% if(typeof errors != 'undefined') { %> <%
+        errors.forEach(function(error) { %>
+        <div class="ui-alert-danger">
+          <p><%= error.msg %></p>
+        </div>
+        <% }); %> <% } %>
+
+        <label class="uk-form-label">Your Name</label>
+        <input
+          type="text"
+          class="uk-input"
+          placeholder="Your fullname name"
+          name="fullname"
+          required
+        />
+
+        <label class="uk-form-label">Email</label>
+        <input
+          type="email"
+          class="uk-input"
+          placeholder="Your email address"
+          name="email"
+          required
+        />
+
+        <label class="uk-form-label">Password</label>
+        <input
+          type="password"
+          class="uk-input"
+          placeholder="Create password"
+          name="password"
+          required
+        />
+
+        <div>
+          <p>
+            <input class="uk-checkbox" type="checkbox" required /> I agree to
+            the <a href="#">Terms of Service</a>
+          </p>
+          <button
+            type="submit"
+            class="uk-button uk-button-primary uk-width-1-1 uk-margin-top"
+          >
+            Create my account
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
