@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const async = require('async');
 const nodemailer = require('nodemailer');
+const { DataUtils } = require('../utils/index');
 
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
@@ -50,6 +51,65 @@ router.get('/login', (req, res) => res.render('./pages/login'));
 router.get('/register', (req, res) => res.render('./pages/register'));
 router.get('/reset', (req, res) => res.render('./pages/reset'));
 router.get('/member-login', (req, res) => res.render('./pages/mregister'));
+router.get('/list', (req, res) => res.render('./pages/users_list'));
+
+const listAllUsers = async ({ limit, start, search, sortBy, sortDir }) => {
+  let result = {};
+  let user_query = {};
+  let db_query = {};
+  let sort = { date: -1 };
+  if (sortBy === 'fullname') sort = { fullname: sortDir === 'desc' ? -1 : 1 };
+  if (sortBy === 'role') sort = { role: sortDir === 'desc' ? -1 : 1 };
+  if (sortBy === 'date') sort = { date: sortDir === 'desc' ? -1 : 1 };
+  if (sortBy === 'email') sort = { email: sortDir === 'desc' ? -1 : 1 };
+  if (sortBy === 'status')
+    sort = { 'plan.status': sortDir === 'desc' ? -1 : 1 };
+
+  if (search) db_query = { fullname: { $regex: search, $options: 'i' } };
+  result = await DataUtils.paging({
+    start,
+    limit,
+    sort: sort,
+    model: User,
+    query: [
+      {
+        $match: { $and: [db_query, user_query] },
+      },
+    ],
+  });
+  return result;
+};
+
+const findSortFieldName = (sortCol) => {
+  let sortField = 'fullname';
+  if (sortCol === 1) sortField = 'role';
+  if (sortCol === 2) sortField = 'date';
+  if (sortCol === 3) sortField = 'status';
+  if (sortCol === 4) sortField = 'email';
+  return sortField;
+};
+
+router.get('/api/list', async (req, res, next) => {
+  let limit = parseInt(req.query.limit) || 15;
+  let start = parseInt(req.query.start) || 0;
+  let sortCol = req.query.order ? parseInt(req.query.order[0].column) : null;
+  let sortDir = req.query.order ? req.query.order[0].dir : null;
+  let sortBy = sortCol >= 0 ? findSortFieldName(sortCol) : null;
+  let search =
+    req.query.search && req.query.search.value ? req.query.search.value : null;
+  try {
+    let users = await listAllUsers({
+      start,
+      limit,
+      search,
+      sortBy,
+      sortDir,
+    });
+    res.json({ data: users });
+  } catch (e) {
+    return next(e);
+  }
+});
 
 router.get('/subscription', ensureAuthenticated, (req, res) => {
   if (req.user.planid && req.user.planid != '') return res.redirect('/app');

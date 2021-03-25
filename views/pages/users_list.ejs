@@ -1,0 +1,119 @@
+<div class="uk-container">
+  <div
+    style="margin-top: 30px"
+    class="uk-child-width-expand@s uk-text-center"
+    uk-grid
+  >
+    <div>
+      <h1 class="uk-heading">Current users</h1>
+    </div>
+    <div></div>
+    <div><button class="uk-button uk-button-primary">Add User</button></div>
+  </div>
+  <div class="uk-grid-column-small uk-grid-row-large">
+    <table
+      id="tblUsersList"
+      class="uk-table uk-table-divider display"
+      style="width: 100%"
+    >
+      <thead>
+        <tr>
+          <td>Full Name</td>
+          <td>User Type</td>
+          <td>Created At</td>
+          <td>Status</td>
+          <td>Email</td>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"
+></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script>
+  let dtTable;
+  let dtConfig = {
+    bLengthChange: false,
+    ordering: true,
+    pageLength: 15,
+    paging: true,
+    processing: true,
+    responsive: true,
+    filter: true,
+    serverSide: true,
+    searchDelay: 500,
+    ajax: {
+      url: '/u/api/list',
+      type: 'Get',
+      dataFilter: function (data) {
+        let json = jQuery.parseJSON(data);
+        json.recordsTotal = json.data.total;
+        json.recordsFiltered = json.data.total;
+        json.data = json.data.data;
+        return JSON.stringify(json); // return JSON string
+      },
+    },
+    language: {
+      search: '_INPUT_',
+      searchPlaceholder: 'Search by name...',
+    },
+    columns: [
+      {
+        data: null,
+        render: function (rd) {
+          return rd.fullname;
+        },
+      },
+      {
+        data: null,
+        className: 'text-center',
+        width: '15%',
+        render: function (rd) {
+          return rd.role ? rd.role : '-';
+        },
+      },
+      {
+        data: null,
+        render: function (rd) {
+          return moment(rd.date).format('MMMM Do YYYY');
+        },
+        className: 'text-center',
+        width: '20%',
+      },
+      {
+        data: null,
+        className: 'text-center',
+        width: '10%',
+        render: function (rd) {
+          return rd.plan ? rd.plan.status : '-';
+        },
+      },
+      {
+        data: null,
+        className: 'text-center',
+        render: function (rd) {
+          return rd.email;
+        },
+      },
+    ],
+  };
+
+  $(document).ready(function () {
+    dtTable = $('#tblUsersList').DataTable(dtConfig);
+
+    $('body #users-filter').on('change', function () {
+      page.filerByStatus(this.value);
+    });
+  });
+
+  const page = {
+    filerByStatus: (st) => {
+      dtTable.ajax.url('/u/api/list').load();
+    },
+  };
+</script>
