@@ -1,16 +1,20 @@
 <div class="uk-container">
-  <div
-    style="margin-top: 30px"
-    class="uk-child-width-expand@s uk-text-center"
-    uk-grid
-  >
+  <div style="margin-top: 30px" class="uk-child-width-expand@s" uk-grid>
     <div>
       <h1 class="uk-heading">Current users</h1>
     </div>
     <div></div>
-    <div><button class="uk-button uk-button-primary">Add User</button></div>
+    <div>
+      <button
+        class="uk-button uk-button-primary uk-margin-small-right uk-align-right"
+        type="button"
+        uk-toggle="target: #modal-example"
+      >
+        Add User
+      </button>
+    </div>
   </div>
-  <div class="uk-grid-column-small uk-grid-row-large">
+  <div class="uk-grid-column-small uk-grid-row-medium">
     <table
       id="tblUsersList"
       class="uk-table uk-table-divider display"
@@ -29,6 +33,150 @@
     </table>
   </div>
 </div>
+
+<!-- This is the modal -->
+<div id="modal-example" uk-modal>
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">Add User</h2>
+    <form>
+      <fieldset class="uk-fieldset">
+        <div class="uk-margin">
+          <input
+            name="firstName"
+            class="uk-input"
+            type="text"
+            placeholder="First Name*"
+          />
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="lastName"
+            class="uk-input"
+            type="text"
+            placeholder="Last Name*"
+          />
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="email"
+            class="uk-input"
+            type="text"
+            placeholder="Email*"
+          />
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="password"
+            class="uk-input"
+            type="text"
+            placeholder="Password*"
+          />
+        </div>
+
+        <div class="uk-margin">
+          <select class="uk-select" name="userType">
+            <option value="">--Select Type--</option>
+            <option value="District Admin">District Admin</option>
+            <option value="School Admin">School Admin</option>
+            <option value="Home">Home</option>
+            <option value="Trial">Trial</option>
+          </select>
+        </div>
+
+        <div class="uk-margin">
+          <select class="uk-select" name="role">
+            <option value="">--Select Role--</option>
+            <option value="Admin">Admin</option>
+            <option value="Teacher">Teacher</option>
+            <option value="Librarian">Librarian</option>
+            <option value="Parent">Parent</option>
+            <option value="Student">Student</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="uk-margin">
+          <select class="uk-select" name="reference">
+            <option value="">--Select Reference--</option>
+          </select>
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="phoneNumber"
+            class="uk-input"
+            type="text"
+            placeholder="Phone Number*"
+          />
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="district"
+            class="uk-input"
+            type="text"
+            placeholder="School/District Name*"
+          />
+        </div>
+
+        <div class="uk-margin">
+          <select class="uk-select" name="country">
+            <option value="">--Select Country--</option>
+            <option value="US">US</option>
+            <option value="Canada">Canada</option>
+            <option value="Nepal">Nepal</option>
+          </select>
+        </div>
+
+        <div class="uk-margin">
+          <select class="uk-select" name="province">
+            <option value="">--Select State/Province--</option>
+            <option value="Province 1">Province 1</option>
+            <option value="Province 2">Province 2</option>
+            <option value="Porvince 3">Province 3</option>
+          </select>
+        </div>
+
+        <div class="uk-margin">
+          <select class="uk-select" name="city">
+            <option value="">--Select City--</option>
+            <option value="City 1">City 1</option>
+            <option value="City 2">City 2</option>
+            <option value="City 3">City 3</option>
+          </select>
+        </div>
+
+        <div class="uk-margin">
+          <select class="uk-select" name="status">
+            <option value="">--Select Status--</option>
+            <option value="Current">Current</option>
+            <option value="Expired">Expired</option>
+            <option value="Trial">Trial</option>
+          </select>
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="expiryDate"
+            class="uk-input"
+            type="text"
+            placeholder="Expiry Date*"
+          />
+        </div>
+      </fieldset>
+    </form>
+    <p class="uk-text-right">
+      <button class="uk-button uk-button-default uk-modal-close" type="button">
+        Cancel
+      </button>
+      <button class="uk-button uk-button-primary" type="button">Save</button>
+    </p>
+  </div>
+</div>
+
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
