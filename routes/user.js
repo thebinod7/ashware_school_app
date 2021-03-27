@@ -116,6 +116,10 @@ router.get('/subscription', ensureAuthenticated, (req, res) => {
   res.render('./pages/subscribe', { user: req.user });
 });
 
+router.post('/add', (req, res) => {
+  console.log('BODY=>', req.body);
+});
+
 //@Register Handle
 router.post('/register', (req, res) => {
   const { fullname, email, password } = req.body;

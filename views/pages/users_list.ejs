@@ -38,7 +38,7 @@
 <div id="modal-example" uk-modal>
   <div class="uk-modal-dialog uk-modal-body">
     <h2 class="uk-modal-title">Add User</h2>
-    <form>
+    <form method="POST" action="/u/add">
       <fieldset class="uk-fieldset">
         <div class="uk-margin">
           <input
@@ -46,6 +46,7 @@
             class="uk-input"
             type="text"
             placeholder="First Name*"
+            required
           />
         </div>
 
@@ -55,6 +56,7 @@
             class="uk-input"
             type="text"
             placeholder="Last Name*"
+            required
           />
         </div>
 
@@ -64,6 +66,7 @@
             class="uk-input"
             type="text"
             placeholder="Email*"
+            required
           />
         </div>
 
@@ -71,13 +74,14 @@
           <input
             name="password"
             class="uk-input"
-            type="text"
+            type="password"
             placeholder="Password*"
+            required
           />
         </div>
 
         <div class="uk-margin">
-          <select class="uk-select" name="userType">
+          <select class="uk-select" name="userType" required>
             <option value="">--Select Type--</option>
             <option value="District Admin">District Admin</option>
             <option value="School Admin">School Admin</option>
@@ -87,7 +91,7 @@
         </div>
 
         <div class="uk-margin">
-          <select class="uk-select" name="role">
+          <select class="uk-select" name="role" required>
             <option value="">--Select Role--</option>
             <option value="Admin">Admin</option>
             <option value="Teacher">Teacher</option>
@@ -98,11 +102,11 @@
           </select>
         </div>
 
-        <div class="uk-margin">
+        <!-- <div class="uk-margin">
           <select class="uk-select" name="reference">
             <option value="">--Select Reference--</option>
           </select>
-        </div>
+        </div> -->
 
         <div class="uk-margin">
           <input
@@ -110,6 +114,7 @@
             class="uk-input"
             type="text"
             placeholder="Phone Number*"
+            required
           />
         </div>
 
@@ -119,6 +124,7 @@
             class="uk-input"
             type="text"
             placeholder="School/District Name*"
+            required
           />
         </div>
 
@@ -127,26 +133,87 @@
             <option value="">--Select Country--</option>
             <option value="US">US</option>
             <option value="Canada">Canada</option>
-            <option value="Nepal">Nepal</option>
           </select>
         </div>
 
         <div class="uk-margin">
           <select class="uk-select" name="province">
             <option value="">--Select State/Province--</option>
-            <option value="Province 1">Province 1</option>
-            <option value="Province 2">Province 2</option>
-            <option value="Porvince 3">Province 3</option>
+            <option value="Alberat">Alberta</option>
+            <option value="British Columbia">British Columbia</option>
+            <option value="Manitoba">Manitoba</option>
+            <option value="Newfoundland and Labrador">
+              Newfoundland and Labrador
+            </option>
+            <option value="Northwest Territories">Northwest Territories</option>
+            <option value="Nova Scotia">Nova Scotia</option>
+            <option value="Nunavut">Nunavut</option>
+            <option value="Ontario">Ontario</option>
+            <option value="Prince Edward Island">Prince Edward Island</option>
+            <option value="Quebec">Quebec</option>
+            <option value="Saskatchewan">Saskatchewan</option>
+            <option value="Yukon">Yukon</option>
+            <option value="Alabama">Alabama</option>
+            <option value="Alaska">Alaska</option>
+            <option value="Arizona">Arizona</option>
+            <option value="Arkansas">Arkansas</option>
+            <option value="California">California</option>
+            <option value="Colorado">Colorado</option>
+            <option value="Connecticut">Connecticut</option>
+            <option value="Delaware">Delaware</option>
+            <option value="District Of Columbia">District Of Columbia</option>
+            <option value="Florida">Florida</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Hawaii">Hawaii</option>
+            <option value="Idaho">Idaho</option>
+            <option value="Illinois">Illinois</option>
+            <option value="Indiana">Indiana</option>
+            <option value="Iowa">Iowa</option>
+            <option value="Kansas">Kansas</option>
+            <option value="Kentucky">Kentucky</option>
+            <option value="Louisiana">Louisiana</option>
+            <option value="Maine">Maine</option>
+            <option value="Maryland">Maryland</option>
+            <option value="Massachusetts">Massachusetts</option>
+            <option value="Michigan">Michigan</option>
+            <option value="Minnesota">Minnesota</option>
+            <option value="Mississippi">Mississippi</option>
+            <option value="Missouri">Missouri</option>
+            <option value="Montana">Montana</option>
+            <option value="Nebraska">Nebraska</option>
+            <option value="Nevada">Nevada</option>
+            <option value="New Hampshire">New Hampshire</option>
+            <option value="New Jersey">New Jersey</option>
+            <option value="New Mexico">New Mexico</option>
+            <option value="New York">New York</option>
+            <option value="North Carolina">North Carolina</option>
+            <option value="North Dakota">North Dakota</option>
+            <option value="Ohio">Ohio</option>
+            <option value="Oklahoma">Oklahoma</option>
+            <option value="Oregon">Oregon</option>
+            <option value="Pennsylvania">Pennsylvania</option>
+            <option value="Rhode Island">Rhode Island</option>
+            <option value="South Carolina">South Carolina</option>
+            <option value="South Dakota">South Dakota</option>
+            <option value="Tennessee">Tennessee</option>
+            <option value="Texas">Texas</option>
+            <option value="Utah">Utah</option>
+            <option value="Vermont">Vermont</option>
+            <option value="Virginia">Virginia</option>
+            <option value="Washington">Washington</option>
+            <option value="West Virginia">West Virginia</option>
+            <option value="Wisconsin">Wisconsin</option>
+            <option value="Wyoming">Wyoming</option>
           </select>
         </div>
 
         <div class="uk-margin">
-          <select class="uk-select" name="city">
-            <option value="">--Select City--</option>
-            <option value="City 1">City 1</option>
-            <option value="City 2">City 2</option>
-            <option value="City 3">City 3</option>
-          </select>
+          <input
+            name="city"
+            class="uk-input"
+            type="text"
+            placeholder="City Name*"
+          />
         </div>
 
         <div class="uk-margin">
@@ -160,20 +227,26 @@
 
         <div class="uk-margin">
           <input
+            id="expiryDate"
             name="expiryDate"
             class="uk-input"
-            type="text"
+            type="date"
             placeholder="Expiry Date*"
+            required
           />
         </div>
       </fieldset>
+
+      <p class="uk-text-right">
+        <button
+          class="uk-button uk-button-default uk-modal-close"
+          type="button"
+        >
+          Cancel
+        </button>
+        <button class="uk-button uk-button-primary" type="submit">Save</button>
+      </p>
     </form>
-    <p class="uk-text-right">
-      <button class="uk-button uk-button-default uk-modal-close" type="button">
-        Cancel
-      </button>
-      <button class="uk-button uk-button-primary" type="button">Save</button>
-    </p>
   </div>
 </div>
 
