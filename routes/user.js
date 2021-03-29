@@ -166,10 +166,31 @@ router.post('/add', async (req, res, err) => {
   try {
     const newUser = new User(sanitizedPayload);
     const doc = await newUser.save();
-    if (doc) {
-      req.flash('success_msg', 'User created successfully');
-      res.redirect('/u/list');
+    if (doc && sanitizedPayload.sendInvitation) {
+      let mailOptions = {
+        from: brandMail,
+        to: doc.email,
+        subject: `New user registration`,
+        text: '',
+        html: `<h1 style="text-align:center; color:#a8c6df;">Hello ${doc.fullname}</h1> 
+					<div style="background-color:#1c293b; color:#fff; text-align:center; padding: 2rem;">
+						<h3 style="font-weight:700;">Welcome to Ashaware.</h3>
+						<h3 style="font-weight:700;">Please click on the button below to login</h3>
+					</div>
+					<div style="text-align:center; padding: 1rem 30%;">
+					   <a href="${URLroute}/u/login" style="${button}">Go to Login</a>
+					</div>
+				 `,
+      };
+      let sent = await sendMail(mailOptions);
+      if (sent) {
+        req.flash('success_msg', 'User created successfully');
+        res.redirect('/u/list');
+        return;
+      }
     }
+    req.flash('success_msg', 'User created successfully');
+    res.redirect('/u/list');
   } catch (err) {
     next(err);
   }
