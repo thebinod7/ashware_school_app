@@ -5,7 +5,6 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const path = require('path');
-const bodyParser = require('body-parser');
 
 const app = express();
 require('dotenv').config();
@@ -18,7 +17,7 @@ app.set('view engine', 'ejs');
 
 //@Middelware & Static Folder
 app.use(express.static(`${__dirname}/public`));
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json({}));
 
 //Express Session Middleware

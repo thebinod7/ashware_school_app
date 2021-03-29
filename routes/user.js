@@ -89,6 +89,41 @@ const findSortFieldName = (sortCol) => {
   return sortField;
 };
 
+const userExtraPayload = (data) => {
+  let extra = {};
+  if (data.phoneNumber) extra.phoneNumber = data.phoneNumber;
+  if (data.country) extra.country = data.country;
+  if (data.district) extra.district = data.district;
+  if (data.city) extra.city = data.city;
+  if (data.province) extra.province = data.province;
+  if (data.status) extra.status = data.status;
+  if (data.expiryDate) extra.expiryDate = data.expiryDate;
+  if (data.userType) extra.userType = data.userType;
+  if (data.reference) extra.reference = data.reference;
+  return extra;
+};
+
+const removeExtraFields = (data) => {
+  let extra = { ...data };
+  if (extra.phoneNumber) delete extra.phoneNumber;
+  if (extra.country) delete extra.country;
+  if (extra.district) delete extra.district;
+  if (extra.city) delete extra.city;
+  if (extra.province) delete extra.province;
+  if (extra.status) delete extra.status;
+  if (extra.expiryDate) delete extra.expiryDate;
+  if (extra.userType) delete extra.userType;
+  if (extra.reference) delete extra.reference;
+  if (extra.firstName) delete extra.firstName;
+  if (extra.lastName) delete extra.lastName;
+  return extra;
+};
+
+const hashPassword = async (rawPassword) => {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(rawPassword, salt);
+};
+
 router.get('/api/list', async (req, res, next) => {
   let limit = parseInt(req.query.limit) || 15;
   let start = parseInt(req.query.start) || 0;
@@ -116,8 +151,28 @@ router.get('/subscription', ensureAuthenticated, (req, res) => {
   res.render('./pages/subscribe', { user: req.user });
 });
 
-router.post('/add', (req, res) => {
-  console.log('BODY=>', req.body);
+router.get('/add', (req, res) => {
+  res.render('./pages/add_user');
+});
+
+router.post('/add', async (req, res, err) => {
+  let payload = req.body;
+  const extra = userExtraPayload(payload);
+  payload.extraInfo = extra;
+  payload.fullname = `${payload.firstName} ${payload.lastName}`;
+  const sanitizedPayload = removeExtraFields(payload);
+  const hashedPassword = await hashPassword(sanitizedPayload.password);
+  sanitizedPayload.password = hashedPassword;
+  try {
+    const newUser = new User(sanitizedPayload);
+    const doc = await newUser.save();
+    if (doc) {
+      req.flash('success_msg', 'User created successfully');
+      res.redirect('/u/list');
+    }
+  } catch (err) {
+    next(err);
+  }
 });
 
 //@Register Handle
