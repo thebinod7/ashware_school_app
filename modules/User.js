@@ -37,7 +37,15 @@ const UserSchema = new mongoose.Schema({
     reference: String,
     userType: {
       type: String,
-      enum: ['District Admin', 'School Admin', 'Home', 'Trial'],
+      enum: [
+        'District Admin',
+        'School Admin',
+        'Home',
+        'Parent',
+        'Teacher',
+        'Student',
+        'Trial',
+      ],
       default: 'Home',
     },
   },
