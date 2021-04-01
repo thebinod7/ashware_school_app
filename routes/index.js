@@ -42,8 +42,8 @@ cursor: pointer; text-align:center; text-decoration: none;`;
 let globalUser;
 
 router.get('/app', ensureAuthenticated, (req, res) => {
-  if (!req.user.planid || req.user.planid == '')
-    return res.redirect('/u/subscription');
+  //   if (!req.user.planid || req.user.planid == '')
+  //     return res.redirect('/u/subscription');
   res.render('app', { user: req.user });
 });
 

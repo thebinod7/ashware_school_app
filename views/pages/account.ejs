@@ -83,7 +83,7 @@
                 type="text"
                 class="uk-input"
                 name="role"
-                value="<%= user.role === 'Parent' ? 'Home' : user.role %>"
+                value="<%= user.extraInfo && user.extraInfo.userType ? user.extraInfo.userType : 'Home' %>"
                 disabled
               />
             </div>
