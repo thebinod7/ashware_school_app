@@ -155,7 +155,7 @@ router.get('/add', (req, res) => {
   res.render('./pages/add_user');
 });
 
-router.post('/add', async (req, res, err) => {
+router.post('/add', async (req, res, next) => {
   let payload = req.body;
   const extra = userExtraPayload(payload);
   payload.extraInfo = extra;

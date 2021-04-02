@@ -1,7 +1,7 @@
 
 
 
-<% if(user.extraInfo && user.extraInfo.userType === 'District Admin'){ %>
+<% if(user.role == 'District admin'){ %>
     <a href="#" class="tik-report active-navlist" uk-tooltip="title: Report; pos: right"><ion-icon name="analytics-outline"></ion-icon></a>
     <a href="#modal-school" uk-toggl class="tik-schools" uk-tooltip="title: Schools; pos: right"><ion-icon name="business-outline"></ion-icon></a>
     <a href="#modal-teacher" uk-toggle class="tik-teachers" uk-tooltip="title: Teachers; pos: right"><ion-icon name="school-outline"></ion-icon></ion-icon></a>
@@ -10,7 +10,7 @@
     <a href="https://firstfridays.ca/test/subjects/Careers/careers-details.html" target="_blank" uk-tooltip="title: Lessons page; pos: right"><ion-icon name="library-outline"></ion-icon></a>
 <% } %>
 
-<% if(user.extraInfo && user.extraInfo.userType === 'School Admin'){ %>
+<% if(user.role == 'School admin'){ %>
     <a href="#" class="tik-report active-navlist" uk-tooltip="title: Report; pos: right"><ion-icon name="analytics-outline"></ion-icon></a>
     <a href="#modal-student" uk-toggle class="tik-students" uk-tooltip="title: Students; pos: right"><ion-icon name="people-outline"></ion-icon></a>
     <a href="#modal-teacher" uk-toggle class="tik-teachers" uk-tooltip="title: Teachers; pos: right"><ion-icon name="school-outline"></ion-icon></ion-icon></a>
@@ -18,17 +18,17 @@
     <a href="https://firstfridays.ca/test/subjects/Careers/careers-details.html" target="_blank" uk-tooltip="title: Lessons page; pos: right"><ion-icon name="library-outline"></ion-icon></a>
 <% } %>
 
-<% if(user.extraInfo && user.extraInfo.userType === 'Trial'){ %>
+<% if(user.role == 'Trial account'){ %>
     <a href="#" class="tik-report active-navlist" uk-tooltip="title: Report; pos: right"><ion-icon name="analytics-outline"></ion-icon></a>
     <a href="https://firstfridays.ca/test/subjects/Careers/careers-details.html" target="_blank" uk-tooltip="title: Lessons page; pos: right"><ion-icon name="library-outline"></ion-icon></a>
 <% } %>
 
-<% if(user.extraInfo && user.extraInfo.userType === 'Parent'){ %>
+<% if(user.role == 'Parent'){ %>
     <a href="#" class="tik-report active-navlist" uk-tooltip="title: Report; pos: right"><ion-icon name="analytics-outline"></ion-icon></a>
     <a href="https://firstfridays.ca/test/subjects.html" target="_blank" uk-tooltip="title: Lessons page; pos: right"><ion-icon name="library-outline"></ion-icon></a>
 <% } %>
 
-<% if(user.extraInfo && user.extraInfo.userType === 'Teacher'){ %>
+<% if(user.role == 'Teacher'){ %>
     <a href="#" class="tik-report active-navlist" uk-tooltip="title: Report; pos: right"><ion-icon name="analytics-outline"></ion-icon></a>
     <a href="#modal-student" uk-toggle class="tik-students" uk-tooltip="title: Students; pos: right"><ion-icon name="people-outline"></ion-icon></a>
     <a href="#modal-class" uk-toggle class="tik-classes"  uk-tooltip="title: Classes; pos: right"><ion-icon name="albums-outline"></ion-icon></a>
@@ -36,10 +36,13 @@
     <!-- <a href="http://127.0.0.1:5500/home.html#<%= user.schoolid %>" target="_blank" uk-tooltip="title: Lessons page; pos: right"><ion-icon name="library-outline"></ion-icon></a> -->
 <% } %>
 
-<% if(user.extraInfo && user.extraInfo.userType === 'Student'){ %>
+<% if(user.role == 'Student'){ %>
     <a href="#" class="tik-report active-navlist" uk-tooltip="title: Report; pos: right"><ion-icon name="analytics-outline"></ion-icon></a>
     <a href="#modal-lesson-assigned" uk-toggle class="tik-lessons" uk-tooltip="title: Classes; pos: right"><ion-icon name="albums-outline"></ion-icon></a>
 <% } %>
+
+
+
 
 
 
