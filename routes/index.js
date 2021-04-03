@@ -10,7 +10,7 @@ const { ensureAuthenticated } = require('../config/auth');
 const User = require('../modules/User');
 const School = require('../modules/School');
 
-const URLroute = 'https://vast-reaches-84353.herokuapp.com';
+const URLroute = 'https://ashware.herokuapp.com';
 const brandMail = 'marraineshop@gmail.com';
 
 //@====== Setup Transport =========//
@@ -226,7 +226,10 @@ router.post('/add-school', ensureAuthenticated, (req, res) => {
 });
 //@Get school multiple
 router.post('/get-multiple-school', (req, res) => {
-  School.find({ districtid: req.body.districtid }).then((user) => {
+  const districtId = req.body.districtid
+    ? req.body.districtid
+    : 'No_District_ID';
+  School.find({ districtid: districtId }).then((user) => {
     if (user) {
       res.send({ doc: user });
     }

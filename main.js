@@ -5,6 +5,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const path = require('path');
+const morgan = require('morgan');
 
 const app = express();
 require('dotenv').config();
@@ -12,6 +13,7 @@ require('dotenv').config();
 //Passport config
 require('./config/passport')(passport);
 
+app.use(morgan('dev'));
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 
