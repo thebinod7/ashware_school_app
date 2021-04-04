@@ -42,7 +42,8 @@ cursor: pointer; text-align:center; text-decoration: none;`;
 let globalUser;
 
 router.get('/app', ensureAuthenticated, (req, res) => {
-  if (req.user.role === 'District admin' || req.user.role === 'School admin')
+  console.log('/APP==>', req.user);
+  if (req.user.role == 'District admin' || req.user.role === 'School admin')
     return res.render('app', { user: req.user });
 
   if (!req.user.planid || req.user.planid == '')
