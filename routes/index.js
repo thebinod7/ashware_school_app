@@ -10,7 +10,7 @@ const { ensureAuthenticated } = require('../config/auth');
 const User = require('../modules/User');
 const School = require('../modules/School');
 
-const URLroute = 'https://ashware.herokuapp.com';
+const URLroute = 'https://vast-reaches-84353.herokuapp.com';
 const brandMail = 'marraineshop@gmail.com';
 
 //@====== Setup Transport =========//
@@ -42,8 +42,8 @@ cursor: pointer; text-align:center; text-decoration: none;`;
 let globalUser;
 
 router.get('/app', ensureAuthenticated, (req, res) => {
-  //   if (!req.user.planid || req.user.planid == '')
-  //     return res.redirect('/u/subscription');
+  if (!req.user.planid || req.user.planid == '')
+    return res.redirect('/u/subscription');
   res.render('app', { user: req.user });
 });
 
@@ -226,10 +226,7 @@ router.post('/add-school', ensureAuthenticated, (req, res) => {
 });
 //@Get school multiple
 router.post('/get-multiple-school', (req, res) => {
-  const districtId = req.body.districtid
-    ? req.body.districtid
-    : 'No_District_ID';
-  School.find({ districtid: districtId }).then((user) => {
+  School.find({ districtid: req.body.districtid }).then((user) => {
     if (user) {
       res.send({ doc: user });
     }

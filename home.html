@@ -1,148 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-  </head>
-  <body>
-    <h1>Hello</h1>
+</head>
+<body>
+    
+<h1>Hello</h1>
 
-    <a href="test.html">Go</a>
+<a href="test.html">Go</a>
 
-    <script>
-      /**
-       * Get the user IP throught the webkitRTCPeerConnection
-       * @param onNewIP {Function} listener function to expose the IP locally
-       * @return undefined
-       */
-      function getUserIP(onNewIP) {
-        //  onNewIp - your listener function for new IPs
-        //compatibility for firefox and chrome
-        var myPeerConnection =
-          window.RTCPeerConnection ||
-          window.mozRTCPeerConnection ||
-          window.webkitRTCPeerConnection;
-        var pc = new myPeerConnection({
-            iceServers: [],
-          }),
-          noop = function () {},
-          localIPs = {},
-          ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
-          key;
+<script>
+    /**
+ * Get the user IP throught the webkitRTCPeerConnection
+ * @param onNewIP {Function} listener function to expose the IP locally
+ * @return undefined
+ */
+function getUserIP(onNewIP) { //  onNewIp - your listener function for new IPs
+    //compatibility for firefox and chrome
+    var myPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    var pc = new myPeerConnection({
+        iceServers: []
+    }),
+    noop = function() {},
+    localIPs = {},
+    ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g,
+    key;
 
-        function iterateIP(ip) {
-          if (!localIPs[ip]) onNewIP(ip);
-          localIPs[ip] = true;
-        }
+    function iterateIP(ip) {
+        if (!localIPs[ip]) onNewIP(ip);
+        localIPs[ip] = true;
+    }
 
-        //create a bogus data channel
-        pc.createDataChannel('');
+     //create a bogus data channel
+    pc.createDataChannel("");
 
-        // create offer and set local description
-        pc.createOffer()
-          .then(function (sdp) {
-            sdp.sdp.split('\n').forEach(function (line) {
-              if (line.indexOf('candidate') < 0) return;
-              line.match(ipRegex).forEach(iterateIP);
-            });
+    // create offer and set local description
+    pc.createOffer().then(function(sdp) {
+        sdp.sdp.split('\n').forEach(function(line) {
+            if (line.indexOf('candidate') < 0) return;
+            line.match(ipRegex).forEach(iterateIP);
+        });
+        
+        pc.setLocalDescription(sdp, noop, noop);
+    }).catch(function(reason) {
+        // An error occurred, so handle the failure to connect
+    });
 
-            pc.setLocalDescription(sdp, noop, noop);
-          })
-          .catch(function (reason) {
-            // An error occurred, so handle the failure to connect
-          });
+    //listen for candidate events
+    pc.onicecandidate = function(ice) {
+        if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
+        ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
+    };
+}
 
-        //listen for candidate events
-        pc.onicecandidate = function (ice) {
-          if (
-            !ice ||
-            !ice.candidate ||
-            !ice.candidate.candidate ||
-            !ice.candidate.candidate.match(ipRegex)
-          )
-            return;
-          ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
-        };
-      }
-    </script>
+
+
+</script>
+
 
     <script async>
-      let ipid;
-      getUserIP(function (ip) {
-        ipid = ip;
-      });
 
-      window.onload = () => {
-        document.querySelector('body').style.visibility = 'hidden';
 
-        //@For Students and Teachers
-        if (window.location.hash) {
-          fetch('https://ashware.herokuapp.com/get-single-school', {
-            method: 'post',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              schoolid: window.location.hash.substring(1),
-            }),
-          })
-            .then((res) => {
-              return res.json();
-            })
-            .then((res) => {
-              if (res && res.doc) {
-                sessionStorage.setItem(
-                  'last-url',
-                  window.location.hash.substring(1)
-                );
-                if (res.doc._id === window.location.hash.substring(1))
-                  return (document.querySelector('body').style.visibility =
-                    'visible');
-              }
-            });
-          return;
+
+
+let ipid
+  getUserIP(function(ip){
+      ipid = ip
+  });
+
+window.onload = () => {
+    document.querySelector('body').style.visibility = 'hidden'
+
+
+    //@For Students and Teachers
+    if(window.location.hash){
+        fetch('https://vast-reaches-84353.herokuapp.com/get-single-school', {
+             method: 'post',
+             headers: {
+                'Content-Type': 'application/json' 
+               },
+             body: JSON.stringify({ 
+                 schoolid: window.location.hash.substring(1)
+             })  
+         }).then(res => {
+             return res.json()
+         }).then(res => {
+             if(res && res.doc){
+                sessionStorage.setItem("last-url", window.location.hash.substring(1));
+                 if(res.doc._id === window.location.hash.substring(1)) return document.querySelector('body').style.visibility = 'visible'
+             }
+         })
+        return
+    }
+
+  
+function verifyContent(){
+    fetch('https://vast-reaches-84353.herokuapp.com/verify-content', {
+        method: 'get',
+        mode: 'cors',
+        headers : { 
+          'Accept': 'application/json'
         }
+    }).then(res => {
+        return res.json()
+    }).then(res => {
+        console.log('data recived');
+        if(res.doc == null || !res.doc.ip) return launchWindow()
+        console.log('data not empty');
+        const user = res.doc
+        if(!user.ip || user.ip != ipid) return document.querySelector('body').style.visibility = 'hidden'
 
-        function verifyContent() {
-          fetch('https://ashware.herokuapp.com/verify-content', {
-            method: 'get',
-            mode: 'cors',
-            headers: {
-              Accept: 'application/json',
-            },
-          })
-            .then((res) => {
-              return res.json();
-            })
-            .then((res) => {
-              console.log('data recived');
-              if (res.doc == null || !res.doc.ip) return launchWindow();
-              console.log('data not empty');
-              const user = res.doc;
-              if (!user.ip || user.ip != ipid)
-                return (document.querySelector('body').style.visibility =
-                  'hidden');
+        if(user.user == 'Teacher' || user.user == 'Student') return
+        if(!user.plan || user.plan == '') return
+        document.querySelector('body').style.visibility = 'visible'
+    })
+  }
 
-              if (user.user == 'Teacher' || user.user == 'Student') return;
-              if (!user.plan || user.plan == '') return;
-              document.querySelector('body').style.visibility = 'visible';
-            });
-        }
+  verifyContent()
+  function launchWindow(){
+        document.querySelector('body').style.visibility = 'hidden'
+        let popup = window.open('https://vast-reaches-84353.herokuapp.com/app', 'contentverify', 'width=200,height=200,location=yes');
+        setTimeout(() => {
+            verifyContent()
+        }, 4000);
+    }
 
-        verifyContent();
-        function launchWindow() {
-          document.querySelector('body').style.visibility = 'hidden';
-          let popup = window.open(
-            'https://ashware.herokuapp.com/app',
-            'contentverify',
-            'width=200,height=200,location=yes'
-          );
-          setTimeout(() => {
-            verifyContent();
-          }, 4000);
-        }
-      };
+}
+
+
+
+
+        
     </script>
-  </body>
+</body>
 </html>
