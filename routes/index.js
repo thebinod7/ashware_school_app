@@ -10,7 +10,7 @@ const { ensureAuthenticated } = require('../config/auth');
 const User = require('../modules/User');
 const School = require('../modules/School');
 
-const URLroute = 'https://vast-reaches-84353.herokuapp.com';
+const URLroute = 'https://ashware.herokuapp.com';
 const brandMail = 'marraineshop@gmail.com';
 
 //@====== Setup Transport =========//
@@ -42,8 +42,12 @@ cursor: pointer; text-align:center; text-decoration: none;`;
 let globalUser;
 
 router.get('/app', ensureAuthenticated, (req, res) => {
+  if (req.user.role === 'District admin' || req.user.role === 'School admin')
+    return res.render('app', { user: req.user });
+
   if (!req.user.planid || req.user.planid == '')
     return res.redirect('/u/subscription');
+
   res.render('app', { user: req.user });
 });
 
