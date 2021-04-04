@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const async = require('async');
 const nodemailer = require('nodemailer');
+const { DataUtils } = require('../utils/index');
 
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
@@ -52,6 +53,144 @@ router.get('/reset', (req, res) => res.render('./pages/reset'));
 router.get('/member-login', (req, res) => {
   const { role } = req.query;
   res.render('./pages/mregister', { role });
+});
+router.get('/list', (req, res) => res.render('./pages/users_list'));
+router.get('/add', (req, res) => {
+  res.render('./pages/add_user');
+});
+
+const listAllUsers = async ({ limit, start, search, sortBy, sortDir }) => {
+  let result = {};
+  let user_query = {};
+  let db_query = {};
+  let sort = { date: -1 };
+  if (sortBy === 'fullname') sort = { fullname: sortDir === 'desc' ? -1 : 1 };
+  if (sortBy === 'role') sort = { role: sortDir === 'desc' ? -1 : 1 };
+  if (sortBy === 'date') sort = { date: sortDir === 'desc' ? -1 : 1 };
+  if (sortBy === 'email') sort = { email: sortDir === 'desc' ? -1 : 1 };
+  if (sortBy === 'status')
+    sort = { 'plan.status': sortDir === 'desc' ? -1 : 1 };
+
+  if (search) db_query = { fullname: { $regex: search, $options: 'i' } };
+  result = await DataUtils.paging({
+    start,
+    limit,
+    sort: sort,
+    model: User,
+    query: [
+      {
+        $match: { $and: [db_query, user_query] },
+      },
+    ],
+  });
+  return result;
+};
+
+const findSortFieldName = (sortCol) => {
+  let sortField = 'fullname';
+  if (sortCol === 1) sortField = 'role';
+  if (sortCol === 2) sortField = 'date';
+  if (sortCol === 3) sortField = 'status';
+  if (sortCol === 4) sortField = 'email';
+  return sortField;
+};
+
+const userExtraPayload = (data) => {
+  let extra = {};
+  if (data.phoneNumber) extra.phoneNumber = data.phoneNumber;
+  if (data.country) extra.country = data.country;
+  if (data.district) extra.district = data.district;
+  if (data.city) extra.city = data.city;
+  if (data.province) extra.province = data.province;
+  if (data.status) extra.status = data.status;
+  if (data.expiryDate) extra.expiryDate = data.expiryDate;
+  if (data.userType) extra.userType = data.userType;
+  if (data.reference) extra.reference = data.reference;
+  return extra;
+};
+
+const removeExtraFields = (data) => {
+  let extra = { ...data };
+  if (extra.phoneNumber) delete extra.phoneNumber;
+  if (extra.country) delete extra.country;
+  if (extra.district) delete extra.district;
+  if (extra.city) delete extra.city;
+  if (extra.province) delete extra.province;
+  if (extra.status) delete extra.status;
+  if (extra.expiryDate) delete extra.expiryDate;
+  if (extra.userType) delete extra.userType;
+  if (extra.reference) delete extra.reference;
+  if (extra.firstName) delete extra.firstName;
+  if (extra.lastName) delete extra.lastName;
+  return extra;
+};
+
+const hashPassword = async (rawPassword) => {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(rawPassword, salt);
+};
+
+router.get('/api/list', async (req, res, next) => {
+  let limit = parseInt(req.query.limit) || 15;
+  let start = parseInt(req.query.start) || 0;
+  let sortCol = req.query.order ? parseInt(req.query.order[0].column) : null;
+  let sortDir = req.query.order ? req.query.order[0].dir : null;
+  let sortBy = sortCol >= 0 ? findSortFieldName(sortCol) : null;
+  let search =
+    req.query.search && req.query.search.value ? req.query.search.value : null;
+  try {
+    let users = await listAllUsers({
+      start,
+      limit,
+      search,
+      sortBy,
+      sortDir,
+    });
+    res.json({ data: users });
+  } catch (e) {
+    return next(e);
+  }
+});
+
+router.post('/add', async (req, res, next) => {
+  let payload = req.body;
+  const extra = userExtraPayload(payload);
+  payload.extraInfo = extra;
+  payload.fullname = `${payload.firstName} ${payload.lastName}`;
+  const sanitizedPayload = removeExtraFields(payload);
+  const hashedPassword = await hashPassword(sanitizedPayload.password);
+  sanitizedPayload.password = hashedPassword;
+  try {
+    const newUser = new User(sanitizedPayload);
+    const doc = await newUser.save();
+    if (doc && sanitizedPayload.sendInvitation) {
+      let mailOptions = {
+        from: brandMail,
+        to: doc.email,
+        subject: `New user registration`,
+        text: '',
+        html: `<h1 style="text-align:center; color:#a8c6df;">Hello ${doc.fullname}</h1> 
+					  <div style="background-color:#1c293b; color:#fff; text-align:center; padding: 2rem;">
+						  <h3 style="font-weight:700;">Welcome to Ashaware.</h3>
+						  <h3 style="font-weight:700;">Please click on the button below to login</h3>
+					  </div>
+					  <div style="text-align:center; padding: 1rem 30%;">
+						 <a href="${URLroute}/u/login" style="${button}">Go to Login</a>
+					  </div>
+				   `,
+      };
+      let sent = await sendMail(mailOptions);
+      if (sent) {
+        req.flash('success_msg', 'User created successfully');
+        res.redirect('/u/list');
+        return;
+      }
+    }
+    req.flash('success_msg', 'User created successfully');
+    res.redirect('/u/list');
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get('/subscription', ensureAuthenticated, (req, res) => {

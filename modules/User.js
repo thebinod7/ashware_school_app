@@ -33,6 +33,20 @@ const UserSchema = new mongoose.Schema({
     when: String,
     renewal: Number,
   },
+  extraInfo: {
+    phoneNumber: String,
+    country: String,
+    district: String,
+    city: String,
+    province: String,
+    status: {
+      type: String,
+      enum: ['Current', 'Expired', 'Trial'],
+      default: 'Current',
+    },
+    expiryDate: Date,
+    reference: String,
+  },
   date: {
     type: Date,
     default: Date.now,
