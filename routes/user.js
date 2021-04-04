@@ -16,7 +16,7 @@ const User = require('../modules/User');
 const School = require('../modules/School');
 
 const { ensureAuthenticated } = require('../config/auth');
-const URLroute = 'http://localhost:3012';
+const URLroute = 'https://ashware.herokuapp.com';
 const brandMail = 'marraineshop@gmail.com';
 
 //@====== Setup Transport =========//
@@ -104,7 +104,6 @@ const userExtraPayload = (data) => {
   if (data.province) extra.province = data.province;
   if (data.status) extra.status = data.status;
   if (data.expiryDate) extra.expiryDate = data.expiryDate;
-  if (data.userType) extra.userType = data.userType;
   if (data.reference) extra.reference = data.reference;
   return extra;
 };
@@ -118,7 +117,6 @@ const removeExtraFields = (data) => {
   if (extra.province) delete extra.province;
   if (extra.status) delete extra.status;
   if (extra.expiryDate) delete extra.expiryDate;
-  if (extra.userType) delete extra.userType;
   if (extra.reference) delete extra.reference;
   if (extra.firstName) delete extra.firstName;
   if (extra.lastName) delete extra.lastName;

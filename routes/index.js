@@ -10,7 +10,7 @@ const { ensureAuthenticated } = require('../config/auth');
 const User = require('../modules/User');
 const School = require('../modules/School');
 
-const URLroute = 'http://localhost:3012';
+const URLroute = 'https://ashware.herokuapp.com';
 const brandMail = 'marraineshop@gmail.com';
 
 //@====== Setup Transport =========//

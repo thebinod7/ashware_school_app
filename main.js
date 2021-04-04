@@ -60,7 +60,7 @@ const appname = 'School app';
 //Connect to Mongo
 mongoose
   .connect(
-    process.env.LOCAL_DB ||
+    process.env.MONGO_URI ||
       'mongodb://warrnAX0O:3PqyVMpGfpTryvuZ@cluster0-shard-00-00.qlg4a.mongodb.net:27017,cluster0-shard-00-01.qlg4a.mongodb.net:27017,cluster0-shard-00-02.qlg4a.mongodb.net:27017/cluster0?ssl=true&replicaSet=atlas-ubxvtu-shard-0&authSource=admin&retryWrites=true&w=majority',
     { useNewUrlParser: true, useUnifiedTopology: true, retryWrites: false }
   )
