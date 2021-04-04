@@ -15,7 +15,7 @@ const User = require('../modules/User');
 const School = require('../modules/School');
 
 const { ensureAuthenticated } = require('../config/auth');
-const URLroute = 'https://ashware.herokuapp.com';
+const URLroute = 'http://localhost:3012';
 const brandMail = 'marraineshop@gmail.com';
 
 //@====== Setup Transport =========//
@@ -49,7 +49,10 @@ cursor: pointer; text-align:center; text-decoration: none;`;
 router.get('/login', (req, res) => res.render('./pages/login'));
 router.get('/register', (req, res) => res.render('./pages/register'));
 router.get('/reset', (req, res) => res.render('./pages/reset'));
-router.get('/member-login', (req, res) => res.render('./pages/mregister'));
+router.get('/member-login', (req, res) => {
+  const { role } = req.query;
+  res.render('./pages/mregister', { role });
+});
 
 router.get('/subscription', ensureAuthenticated, (req, res) => {
   if (req.user.planid && req.user.planid != '') return res.redirect('/app');
@@ -383,7 +386,7 @@ router.post('/invite-register-empty/:token', (req, res) => {
             { new: true }
           ).then((student) => {
             req.flash('success_msg', 'You are now registered and can login');
-            res.redirect('/u/member-login');
+            res.redirect(`/u/member-login?role=${data.role}`);
             notifyUser(student.districtid, 'Student');
           });
         }
@@ -407,7 +410,7 @@ router.post('/invite-register-empty/:token', (req, res) => {
             { new: true }
           ).then((teach) => {
             req.flash('success_msg', 'You are now registered and can login');
-            res.redirect('/u/member-login');
+            res.redirect(`/u/member-login?role=${data.role}`);
             notifyUser(teach.districtid, 'Teacher');
           });
         }

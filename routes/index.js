@@ -10,7 +10,7 @@ const { ensureAuthenticated } = require('../config/auth');
 const User = require('../modules/User');
 const School = require('../modules/School');
 
-const URLroute = 'https://ashware.herokuapp.com';
+const URLroute = 'http://localhost:3012';
 const brandMail = 'marraineshop@gmail.com';
 
 //@====== Setup Transport =========//
@@ -43,6 +43,8 @@ let globalUser;
 
 router.get('/app', ensureAuthenticated, (req, res) => {
   console.log('/APP==>', req.user);
+  if (!req.user.role) return res.render('./pages/role');
+
   if (req.user.role == 'District admin' || req.user.role === 'School admin')
     return res.render('app', { user: req.user });
 

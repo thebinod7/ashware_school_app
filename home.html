@@ -78,7 +78,7 @@
 
         //@For Students and Teachers
         if (window.location.hash) {
-          fetch('https://ashware.herokuapp.com/get-single-school', {
+          fetch('http://localhost:3012/get-single-school', {
             method: 'post',
             headers: {
               'Content-Type': 'application/json',
@@ -105,7 +105,7 @@
         }
 
         function verifyContent() {
-          fetch('https://ashware.herokuapp.com/verify-content', {
+          fetch('http://localhost:3012/verify-content', {
             method: 'get',
             mode: 'cors',
             headers: {
@@ -134,7 +134,7 @@
         function launchWindow() {
           document.querySelector('body').style.visibility = 'hidden';
           let popup = window.open(
-            'https://ashware.herokuapp.com/app',
+            'http://localhost:3012/app',
             'contentverify',
             'width=200,height=200,location=yes'
           );
