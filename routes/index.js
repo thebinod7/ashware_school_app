@@ -48,7 +48,7 @@ router.get('/app', ensureAuthenticated, (req, res) => {
   if (req.user.role == 'District admin' || req.user.role === 'School admin')
     return res.render('app', { user: req.user });
 
-  if (req.user.roel == 'Parent') {
+  if (req.user.role == 'Parent') {
     if (!req.user.planid || req.user.planid == '')
       return res.redirect('/u/subscription');
   }
