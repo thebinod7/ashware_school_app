@@ -50,13 +50,14 @@ cursor: pointer; text-align:center; text-decoration: none;`;
 router.get('/login', (req, res) => res.render('./pages/login'));
 router.get('/register', (req, res) => res.render('./pages/register'));
 router.get('/reset', (req, res) => res.render('./pages/reset'));
-router.get('/member-login', (req, res) => {
-  const { role } = req.query;
-  res.render('./pages/mregister', { role });
-});
+router.get('/contact', (req, res) => res.render('./pages/plan_contact'));
 router.get('/list', (req, res) => res.render('./pages/users_list'));
 router.get('/add', (req, res) => {
   res.render('./pages/add_user');
+});
+router.get('/member-login', (req, res) => {
+  const { role } = req.query;
+  res.render('./pages/mregister', { role });
 });
 
 const listAllUsers = async ({ limit, start, search, sortBy, sortDir }) => {
@@ -147,6 +148,38 @@ router.get('/api/list', async (req, res, next) => {
     res.json({ data: users });
   } catch (e) {
     return next(e);
+  }
+});
+
+router.post('/contact', async (req, res, next) => {
+  try {
+    const { body } = req;
+    let mailOptions = {
+      from: brandMail,
+      to: body.email,
+      subject: `Query for plan`,
+      text: '',
+      html: `<h1 style="text-align:center; color:#a8c6df;">User Details</h1> 
+					  <div style="background-color:#1c293b; color:#fff; text-align:center; padding: 2rem;">
+						  <p>Name: ${body.firstName} ${body.lastName}</p>
+						  <p>Email: ${body.email}</p>
+						  <p>Phone: ${body.phoneNumber}</p>
+						  <p>Role: ${body.role}</p>
+						  <p>How did you know: ${body.channel}</p>
+						  <p>School/District Name: ${body.districtName}</p>
+						  <p>Country: ${body.country}</p>
+						  <p>Message: ${body.message}</p>
+					  </div>
+				   `,
+    };
+    await sendMail(mailOptions);
+    req.flash(
+      'success_msg',
+      'Thank you, your query has been submitted. We will get back to you.'
+    );
+    res.redirect('back');
+  } catch (err) {
+    next(err);
   }
 });
 

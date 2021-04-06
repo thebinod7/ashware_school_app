@@ -1,0 +1,136 @@
+<div class="uk-container">
+  <div style="margin-top: 30px" class="uk-child-width-expand@s" uk-grid>
+    <div>
+      <h1 class="uk-heading">
+        Schedule a demo or call to learn about Ashaware
+      </h1>
+    </div>
+  </div>
+  <div class="uk-grid-column-small uk-grid-row-medium">
+    <form method="POST" action="/u/contact">
+      <fieldset class="uk-fieldset">
+        <div>
+          <% if(error_msg != '') { %>
+          <div class="ui-alert-danger">
+            <p><%= error_msg %></p>
+          </div>
+          <% } %> <% if(error != '') { %>
+          <div class="ui-alert-danger">
+            <p><%= error %></p>
+          </div>
+          <% } %> <% if(success_msg != '') { %>
+          <div class="ui-alert-success">
+            <p><%= success_msg %></p>
+          </div>
+          <% } %>
+        </div>
+        <div class="uk-margin">
+          <input
+            name="firstName"
+            class="uk-input"
+            type="text"
+            placeholder="First Name*"
+            required
+          />
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="lastName"
+            class="uk-input"
+            type="text"
+            placeholder="Last Name*"
+            required
+          />
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="email"
+            class="uk-input"
+            type="text"
+            placeholder="Email*"
+            required
+          />
+        </div>
+
+        <div class="uk-margin">
+          <select class="uk-select" name="role" required>
+            <option value="">--Select Role--</option>
+            <option value="District admin">District admin</option>
+            <option value="School admin">School admin</option>
+            <option value="Trial account">Trial account</option>
+            <option value="Parent">Parent</option>
+            <option value="Teacher">Teacher</option>
+            <option value="Student">Student</option>
+          </select>
+        </div>
+
+        <div class="uk-margin">
+          <select class="uk-select" name="channel">
+            <option value="">--How did you know about us--</option>
+            <option value="Friends">Friends</option>
+            <option value="Newspaper">Newspaper</option>
+            <option value="Website">Website</option>
+            <option value="TV">TV/Radio</option>
+          </select>
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="phoneNumber"
+            class="uk-input"
+            type="text"
+            placeholder="Phone Number*"
+            required
+          />
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="districtName"
+            class="uk-input"
+            type="text"
+            placeholder="School/District Name*"
+            required
+          />
+        </div>
+
+        <div class="uk-margin">
+          <select class="uk-select" name="country">
+            <option value="">--Select Country--</option>
+            <option value="USA">USA</option>
+            <option value="Canada">Canada</option>
+          </select>
+        </div>
+
+        <div class="uk-margin">
+          <textarea
+            rows="4"
+            id="message"
+            name="message"
+            class="uk-input"
+            type="date"
+            placeholder="How can we help you *"
+            required
+          ></textarea>
+        </div>
+        <!-- <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+          <label
+            ><input class="uk-checkbox" type="checkbox" name="sendInvitation" />
+            Send Invitation</label
+          >
+        </div> -->
+      </fieldset>
+
+      <p class="uk-text-right">
+        <a href="/u/login" class="uk-button uk-button-default uk-modal-close">
+          Cancel
+        </a>
+        <button class="uk-button uk-button-primary" type="submit">
+          Request a Demo
+        </button>
+      </p>
+    </form>
+  </div>
+</div>
