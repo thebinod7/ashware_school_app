@@ -155,8 +155,8 @@ router.post('/contact', async (req, res, next) => {
   try {
     const { body } = req;
     let mailOptions = {
-      from: brandMail,
-      to: body.email,
+      from: body.email,
+      to: brandMail,
       subject: `Query for plan`,
       text: '',
       html: `<h1 style="text-align:center; color:#a8c6df;">User Details</h1> 
