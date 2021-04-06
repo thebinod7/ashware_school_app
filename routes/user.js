@@ -52,6 +52,8 @@ router.get('/register', (req, res) => res.render('./pages/register'));
 router.get('/reset', (req, res) => res.render('./pages/reset'));
 router.get('/contact', (req, res) => res.render('./pages/plan_contact'));
 router.get('/list', (req, res) => res.render('./pages/users_list'));
+router.get('/home-user', (req, res) => res.render('./pages/add_home_user'));
+
 router.get('/add', (req, res) => {
   res.render('./pages/add_user');
 });
@@ -183,8 +185,86 @@ router.post('/contact', async (req, res, next) => {
   }
 });
 
+router.post('/add-user', (req, res) => {
+  const { role, fullname, email, password } = req.body;
+  // if (adminEmail !== 'wsalmon@ashaware.com') {
+  //   req.flash('error_msg', 'You dont have access to do that.');
+  //   return res.redirect('back');
+  // }
+  User.findOne({ email: email }).then((user) => {
+    if (user) {
+      req.flash('error_msg', 'User already exists.');
+      return res.redirect('back');
+    }
+    async function createAccount() {
+      const customer = await stripe.customers.create({
+        email: email,
+        name: fullname,
+        description: `${fullname} w/ email: ${email}`,
+      });
+
+      let runWhenDone = setInterval(() => {
+        if (customer && customer.id) {
+          isDone(customer);
+          clearInterval(runWhenDone);
+        }
+      }, 1000);
+
+      let mailOptions = {
+        from: brandMail,
+        to: email,
+        subject: `New user registration`,
+        text: '',
+        html: `<h1 style="text-align:center; color:#a8c6df;">Hello ${fullname}</h1> 
+					  <div style="background-color:#1c293b; color:#fff; text-align:center; padding: 2rem;">
+						  <h3 style="font-weight:700;">Welcome to Ashaware.</h3>
+						  <h3 style="font-weight:700;">Please click on the button below to login</h3>
+						  <p>Your password is : ${password}</p>
+					  </div>
+					  <div style="text-align:center; padding: 1rem 30%;">
+						 <a href="${URLroute}/u/login" style="${button}">Go to Login</a>
+					  </div>
+				   `,
+      };
+      await sendMail(mailOptions);
+
+      function isDone(usecc) {
+        const newUser = new User({
+          fullname,
+          email,
+          password,
+          customer: usecc.id,
+          role: role,
+        });
+
+        //Hash Password
+
+        bcrypt.genSalt(10, (err, salt) =>
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            newUser
+              .save()
+              .then((user) => {
+                req.flash(
+                  'success_msg',
+                  'You are now registered and can login'
+                );
+                res.redirect('/u/login');
+              })
+              .catch((err) => console.log(err));
+          })
+        );
+      }
+    }
+    createAccount();
+  });
+});
+
 router.post('/add', async (req, res, next) => {
   let payload = req.body;
+
+  const rawPassword = payload.password;
   const extra = userExtraPayload(payload);
   payload.extraInfo = extra;
   payload.fullname = `${payload.firstName} ${payload.lastName}`;
@@ -204,6 +284,7 @@ router.post('/add', async (req, res, next) => {
 					  <div style="background-color:#1c293b; color:#fff; text-align:center; padding: 2rem;">
 						  <h3 style="font-weight:700;">Welcome to Ashaware.</h3>
 						  <h3 style="font-weight:700;">Please click on the button below to login</h3>
+						  <p>Your password is : ${rawPassword}</p>
 					  </div>
 					  <div style="text-align:center; padding: 1rem 30%;">
 						 <a href="${URLroute}/u/login" style="${button}">Go to Login</a>
@@ -220,6 +301,7 @@ router.post('/add', async (req, res, next) => {
     req.flash('success_msg', 'User created successfully');
     res.redirect('/u/list');
   } catch (err) {
+    console.log('ERR==>', err);
     next(err);
   }
 });
@@ -231,7 +313,7 @@ router.get('/subscription', ensureAuthenticated, (req, res) => {
 
 //@Register Handle
 router.post('/register', (req, res) => {
-  const { fullname, email, password } = req.body;
+  const { role, fullname, email, password } = req.body;
 
   let errors = [];
   //Check required fields
@@ -287,6 +369,7 @@ router.post('/register', (req, res) => {
               email,
               password,
               customer: usecc.id,
+              role: role ? role : '',
             });
             //Hash Password
             bcrypt.genSalt(10, (err, salt) =>

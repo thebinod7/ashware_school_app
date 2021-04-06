@@ -12,26 +12,37 @@
   <div class="main-auth__section">
     <div class="auth-form ui-box-sh">
       <div class="top-auth-form auth-container">
-        <h2>Sign up</h2>
-        <p>
+        <h2>Add User</h2>
+        <!-- <p>
           Setting up an account is quick and straight-forward. Already signed
           up? <a href="/u/login">Log in</a>
-        </p>
+        </p> -->
       </div>
       <hr />
-      <form class="auth-container" method="POST" action="/u/register">
-        <% if(typeof errors != 'undefined') { %> <%
-        errors.forEach(function(error) { %>
+      <form class="auth-container" method="POST" action="/u/add-user">
+        <% if(error_msg != '') { %>
         <div class="ui-alert-danger">
-          <p><%= error.msg %></p>
+          <p><%= error_msg %></p>
         </div>
-        <% }); %> <% } %>
+        <% } %>
 
-        <label class="uk-form-label">Your Name</label>
+        <!-- <input type="hidden" name="adminEmail" value="abc" /> -->
+
+        <div class="uk-margin">
+          <select class="uk-select" name="role" required>
+            <option value="">--Select Role--</option>
+            <option value="District admin">District admin</option>
+            <option value="School admin">School admin</option>
+            <option value="Trial account">Trial account</option>
+            <option value="Parent">Parent</option>
+          </select>
+        </div>
+
+        <label class="uk-form-label"> Name</label>
         <input
           type="text"
           class="uk-input"
-          placeholder="Your fullname name"
+          placeholder="Enter fullname name"
           name="fullname"
           required
         />
@@ -40,7 +51,7 @@
         <input
           type="email"
           class="uk-input"
-          placeholder="Your email address"
+          placeholder="Enter email address"
           name="email"
           required
         />
@@ -49,21 +60,21 @@
         <input
           type="password"
           class="uk-input"
-          placeholder="Create password"
+          placeholder="Enter password"
           name="password"
           required
         />
 
         <div>
-          <p>
+          <!-- <p>
             <input class="uk-checkbox" type="checkbox" required /> I agree to
             the <a href="#">Terms of Service</a>
-          </p>
+          </p> -->
           <button
             type="submit"
             class="uk-button uk-button-primary uk-width-1-1 uk-margin-top"
           >
-            Create my account
+            Create user account
           </button>
         </div>
       </form>

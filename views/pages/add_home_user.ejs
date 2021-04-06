@@ -1,0 +1,56 @@
+<div class="uk-container">
+  <div style="margin-top: 30px" class="uk-child-width-expand@s" uk-grid>
+    <div>
+      <h1 class="uk-heading">Create an account</h1>
+    </div>
+  </div>
+  <div class="uk-grid-column-small uk-grid-row-medium">
+    <form method="POST" action="/u/register">
+      <input type="hidden" name="role" value="Parent" />
+      <fieldset class="uk-fieldset">
+        <div class="uk-margin">
+          <input
+            name="fullname"
+            class="uk-input"
+            type="text"
+            placeholder="Fullname*"
+            required
+          />
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="email"
+            class="uk-input"
+            type="text"
+            placeholder="Email*"
+            required
+          />
+        </div>
+
+        <div class="uk-margin">
+          <input
+            name="password"
+            class="uk-input"
+            type="password"
+            placeholder="Password*"
+            required
+          />
+        </div>
+
+        <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+          <p>Already have an account? <a href="/u/login">Log in</a></p>
+        </div>
+      </fieldset>
+
+      <p class="uk-text-right">
+        <a href="/u/login" class="uk-button uk-button-default uk-modal-close">
+          Cancel
+        </a>
+        <button class="uk-button uk-button-primary" type="submit">
+          Submit
+        </button>
+      </p>
+    </form>
+  </div>
+</div>
