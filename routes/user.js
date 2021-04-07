@@ -185,6 +185,17 @@ router.post('/contact', async (req, res, next) => {
   }
 });
 
+const generateID = (len) => {
+  if (!len) len = 8;
+  var charset =
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+    retVal = '';
+  for (var i = 0, n = charset.length; i < len; ++i) {
+    retVal += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return retVal;
+};
+
 router.post('/add-user', (req, res) => {
   const { role, fullname, email, password } = req.body;
   // if (adminEmail !== 'wsalmon@ashaware.com') {
@@ -229,15 +240,16 @@ router.post('/add-user', (req, res) => {
       await sendMail(mailOptions);
 
       function isDone(usecc) {
-        const newUser = new User({
+        let payload = {
           fullname,
           email,
           password,
           customer: usecc.id,
           role: role,
-        });
-
-        //Hash Password
+        };
+        if (role && role == 'District admin')
+          payload.districtid = generateID(8);
+        const newUser = new User(payload);
 
         bcrypt.genSalt(10, (err, salt) =>
           bcrypt.hash(newUser.password, salt, (err, hash) => {

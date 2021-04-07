@@ -206,7 +206,6 @@ router.post('/delete-school', ensureAuthenticated, (req, res) => {
 //@Add school via invite
 router.post('/add-school', ensureAuthenticated, (req, res) => {
   const data = req.body;
-
   const newSchool = new School({
     districtid: data.districtid,
     schoolname: data.schoolname,
@@ -235,11 +234,15 @@ router.post('/add-school', ensureAuthenticated, (req, res) => {
 });
 //@Get school multiple
 router.post('/get-multiple-school', (req, res) => {
-  School.find({ districtid: req.body.districtid }).then((user) => {
-    if (user) {
-      res.send({ doc: user });
+  const { districtid } = req.body;
+  console.log({ districtid });
+  School.find({ districtid: districtid ? districtid : 'NO_DISTRICT_ID' }).then(
+    (user) => {
+      if (user) {
+        res.send({ doc: user });
+      }
     }
-  });
+  );
 });
 
 //@Query User account
