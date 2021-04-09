@@ -18,6 +18,7 @@ const School = require('../modules/School');
 const { ensureAuthenticated } = require('../config/auth');
 const URLroute = 'https://ashware.herokuapp.com';
 const brandMail = 'marraineshop@gmail.com';
+const CONTACT_EMAIL = 'contact@ashaware.com';
 
 //@====== Setup Transport =========//
 const globalTransport = nodemailer.createTransport({
@@ -48,14 +49,24 @@ cursor: pointer; text-align:center; text-decoration: none;`;
 
 //@Login / Registration / Reset Page
 router.get('/login', (req, res) => res.render('./pages/login'));
-router.get('/register', (req, res) => res.render('./pages/register'));
+router.get('/register', ensureAuthenticated, (req, res) => {
+  if (req.user && req.user.role === 'Super admin')
+    return res.render('./pages/register');
+
+  req.flash('error_msg', 'Please login to view that resource.');
+  return res.redirect('/u/login');
+});
 router.get('/reset', (req, res) => res.render('./pages/reset'));
 router.get('/contact', (req, res) => res.render('./pages/plan_contact'));
 router.get('/list', (req, res) => res.render('./pages/users_list'));
 router.get('/home-user', (req, res) => res.render('./pages/add_home_user'));
 
-router.get('/add', (req, res) => {
-  res.render('./pages/add_user');
+router.get('/add', ensureAuthenticated, (req, res) => {
+  if (req.user && req.user.role === 'Super admin')
+    return res.render('./pages/add_user');
+
+  req.flash('error_msg', 'Please login to view that resource.');
+  return res.redirect('/u/login');
 });
 router.get('/member-login', (req, res) => {
   const { role } = req.query;
@@ -158,7 +169,7 @@ router.post('/contact', async (req, res, next) => {
     const { body } = req;
     let mailOptions = {
       from: body.email,
-      to: brandMail,
+      to: CONTACT_EMAIL,
       subject: `Query for plan`,
       text: '',
       html: `<h1 style="text-align:center; color:#a8c6df;">User Details</h1> 
@@ -195,6 +206,19 @@ const generateID = (len) => {
   }
   return retVal;
 };
+// Enable this route to add super admin only
+// router.post('/add-super-admin', async (req, res, next) => {
+//   try {
+//     const { body } = req;
+//     body.password = await hashPassword(body.password);
+//     body.role = 'Super admin';
+//     const newUser = new User(body);
+//     const user = await newUser.save();
+//     res.json({ message: 'Super admin created', data: user });
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 router.post('/add-user', (req, res) => {
   const { role, fullname, email, password } = req.body;

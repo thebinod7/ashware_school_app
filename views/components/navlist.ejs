@@ -1,4 +1,7 @@
-
+<% if(user.role == 'Super admin'){ %>
+    <a href="/u/register" target="_blank" uk-tooltip="title: Add Users; pos: right"><ion-icon name="people-outline"></ion-icon></a>
+	<a href="/u/list" target="_blank" uk-tooltip="title: List Users; pos: right"><ion-icon name="people-outline"></ion-icon></a>
+<% } %>
 
 
 <% if(user.role == 'District admin'){ %>
