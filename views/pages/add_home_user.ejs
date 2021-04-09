@@ -5,6 +5,11 @@
     </div>
   </div>
   <div class="uk-grid-column-small uk-grid-row-medium">
+    <% if(error_msg != '') { %>
+    <div class="ui-alert-danger">
+      <p><%= error_msg %></p>
+    </div>
+    <% } %>
     <form method="POST" action="/u/register">
       <input type="hidden" name="role" value="Parent" />
       <fieldset class="uk-fieldset">

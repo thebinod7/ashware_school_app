@@ -60,6 +60,9 @@ router.get('/reset', (req, res) => res.render('./pages/reset'));
 router.get('/contact', (req, res) => res.render('./pages/plan_contact'));
 router.get('/list', (req, res) => res.render('./pages/users_list'));
 router.get('/home-user', (req, res) => res.render('./pages/add_home_user'));
+router.get('/users-login', (req, res, next) =>
+  res.render('./pages/users_login')
+);
 
 router.get('/add', ensureAuthenticated, (req, res) => {
   if (req.user && req.user.role === 'Super admin')
@@ -350,86 +353,55 @@ router.get('/subscription', ensureAuthenticated, (req, res) => {
 //@Register Handle
 router.post('/register', (req, res) => {
   const { role, fullname, email, password } = req.body;
-
-  let errors = [];
-  //Check required fields
-  if (!fullname || !email || !password) {
-    errors.push({ msg: 'Please fill in all fields' });
-  }
-  //Check password match
-  // if (password !== password2) {
-  //     errors.push({msg: 'Passwords does not match'})
-  // }
-  //Password length
-  if (password.length < 8) {
-    errors.push({ msg: 'Password should be at least 8 characters' });
-  }
-
-  if (errors.length > 0) {
-    res.render('./pages/register', {
-      errors,
-      fullname,
-      email,
-      password,
-    });
-  } else {
-    //Validate pass
-    User.findOne({ email: email }).then((user) => {
-      if (user) {
-        //User already EXIST
-        errors.push({ msg: 'Email is already registered' });
-        res.render('./pages/register', {
-          errors,
-          fullname,
-          email,
-          password,
+  User.findOne({ email: email }).then((user) => {
+    if (user) {
+      req.flash('error_msg', 'User already exists.');
+      return res.redirect('back');
+    } else {
+      async function createAccount() {
+        const customer = await stripe.customers.create({
+          email: email,
+          name: fullname,
+          description: `${fullname} w/ email: ${email}`,
         });
-      } else {
-        async function createAccount() {
-          const customer = await stripe.customers.create({
-            email: email,
-            name: fullname,
-            description: `${fullname} w/ email: ${email}`,
-          });
 
-          let runWhenDone = setInterval(() => {
-            if (customer && customer.id) {
-              isDone(customer);
-              clearInterval(runWhenDone);
-            }
-          }, 1000);
-
-          function isDone(usecc) {
-            const newUser = new User({
-              fullname,
-              email,
-              password,
-              customer: usecc.id,
-              role: role ? role : '',
-            });
-            //Hash Password
-            bcrypt.genSalt(10, (err, salt) =>
-              bcrypt.hash(newUser.password, salt, (err, hash) => {
-                if (err) throw err;
-                newUser.password = hash;
-                newUser
-                  .save()
-                  .then((user) => {
-                    req.flash(
-                      'success_msg',
-                      'You are now registered and can login'
-                    );
-                    res.redirect('/u/login');
-                  })
-                  .catch((err) => console.log(err));
-              })
-            );
+        let runWhenDone = setInterval(() => {
+          if (customer && customer.id) {
+            isDone(customer);
+            clearInterval(runWhenDone);
           }
+        }, 1000);
+
+        function isDone(usecc) {
+          const newUser = new User({
+            fullname,
+            email,
+            password,
+            customer: usecc.id,
+            role: role ? role : '',
+          });
+          //Hash Password
+          bcrypt.genSalt(10, (err, salt) =>
+            bcrypt.hash(newUser.password, salt, (err, hash) => {
+              if (err) throw err;
+              newUser.password = hash;
+              newUser
+                .save()
+                .then((user) => {
+                  req.flash(
+                    'success_msg',
+                    'You are now registered and can login'
+                  );
+                  res.redirect('/u/login');
+                })
+                .catch((err) => console.log(err));
+            })
+          );
         }
-        createAccount();
       }
-    });
-  }
+      createAccount();
+    }
+  });
 });
 
 //@Notify Admin on teacher and student regsitration
@@ -710,14 +682,13 @@ router.post('/invite-register-empty/:token', (req, res) => {
   }
 });
 
-//@Login Teacher o Member
-router.post('/member-login', (req, res) => {
+router.post('/users-login', (req, res) => {
   const data = req.body;
+  const { email, password } = data;
 
   if (data.role === 'Teacher') {
     School.findOne({
-      'teachers.email': data.email,
-      'teachers.passwordv': data.password,
+      teachers: { $elemMatch: { email: email, passwordv: password } },
     }).then((user) => {
       if (user) {
         res.send({ doc: user });
@@ -727,8 +698,35 @@ router.post('/member-login', (req, res) => {
     });
   } else {
     School.findOne({
-      'students.email': data.email,
-      'students.passwordv': data.password,
+      students: { $elemMatch: { email: email, passwordv: password } },
+    }).then((user) => {
+      if (user) {
+        res.send({ doc: user });
+      } else {
+        res.send({ feed: 'No student' });
+      }
+    });
+  }
+});
+
+//@Login Teacher o Member
+router.post('/member-login', (req, res) => {
+  const data = req.body;
+  const { email, password } = data;
+
+  if (data.role === 'Teacher') {
+    School.findOne({
+      teachers: { $elemMatch: { email: email, passwordv: password } },
+    }).then((user) => {
+      if (user) {
+        res.send({ doc: user });
+      } else {
+        res.send({ feed: 'No teacher' });
+      }
+    });
+  } else {
+    School.findOne({
+      students: { $elemMatch: { email: email, passwordv: password } },
     }).then((user) => {
       if (user) {
         res.send({ doc: user });
