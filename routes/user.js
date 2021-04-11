@@ -224,7 +224,7 @@ const generateID = (len) => {
 // });
 
 router.post('/add-user', (req, res) => {
-  const { role, fullname, email, password } = req.body;
+  const { customPayment, role, fullname, email, password } = req.body;
   // if (adminEmail !== 'wsalmon@ashaware.com') {
   //   req.flash('error_msg', 'You dont have access to do that.');
   //   return res.redirect('back');
@@ -273,6 +273,8 @@ router.post('/add-user', (req, res) => {
           password,
           customer: usecc.id,
           role: role,
+          creditCardPayment:
+            customPayment && customPayment === 'yes' ? false : true,
         };
         if (role && role == 'District admin')
           payload.districtid = generateID(8);

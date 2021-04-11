@@ -12,3 +12,4 @@
 8. Added datatable and moment plugin inside ./views/layout.ejs
 9. Added engine versions inside package.json to smoothly deploy in heroku.
 10. Added Procfile to run node app in heroku.
+11. Added /u/add-user route to add Home users only.

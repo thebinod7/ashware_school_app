@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema({
       'Super admin',
     ],
   },
+  creditCardPayment: { type: Boolean, default: true },
   email: String,
   password: String,
   customer: String,
