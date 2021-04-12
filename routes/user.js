@@ -18,7 +18,7 @@ const School = require('../modules/School');
 const { ensureAuthenticated } = require('../config/auth');
 const URLroute = 'https://ashware.herokuapp.com';
 const brandMail = 'marraineshop@gmail.com';
-const CONTACT_EMAIL = 'binod@mailinator.com';
+const CONTACT_EMAIL = 'contact@ashaware.com';
 
 //@====== Setup Transport =========//
 const globalTransport = nodemailer.createTransport({
