@@ -12,3 +12,12 @@
 8. Added engine versions inside package.json to smoothly deploy in heroku.
 9. Added Procfile to run node app in heroku.
 10. Added /u/add-user route to add Home users only.
+
+
+==========Email Issue============
+Email credentials not working at './routes/user' Line number 28.
+
+
+===========Role based page rendering===========
+
+=> views/component/navlist.ejs
